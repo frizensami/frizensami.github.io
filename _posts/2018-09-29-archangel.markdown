@@ -88,8 +88,8 @@ I used **python** and the **networkx** library to do this. A **participants.tsv*
 1. The 3 constraints that were discussed earlier can be relaxed by a percentage factor if no Hamiltonian cycle is being found. This makes it possible to actually generate a full chain.
 2. The very first iteration of this program didn't even use graphs - it just randomly created a chain and then gave the whole chain a "score" based on some terribly-chosen compatibility numbers. It then repeated the process millions of times and then chose the best chain (in this iteration we were also trying to match people based on their interests by keywords - it didn't go well). Suffice to say that iteration is best forgotten.
 
-# Conclusion
-The Archangel algorithm is still being used and continues to be improved upon :)
+# Current Status
+The Archangel algorithm is still being used and continues to be improved upon.
 
 
 
