@@ -35,5 +35,18 @@
                 <a class="link" href="{% if site.resume-external %}{{ site.resume-url }}{% else %}{{ site.url }}/{{ site.resume-url }}{% endif %}">Résumé</a>
             </li>
         {% endif %}
+
+        {% if site.gpg == true %}
+            <li class="item">
+                <a class="link" href="{{ site.url }}/{{ site.gpg-url }}">GPG&nbsp;Key</a>
+            </li>
+        {% endif %}
+
+        {% if site.ssh == true %}
+            <li class="item">
+                <a class="link" href="{{ site.url }}/{{ site.ssh-url }}">SSH&nbsp;Key</a>
+            </li>
+        {% endif %}
+        
     </ul>
 </nav>
