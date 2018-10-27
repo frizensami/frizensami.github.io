@@ -1,0 +1,29 @@
+---
+title: "A Directory of LWN Articles I Like"
+layout: post
+date: 2018-10-27 12:24
+image: /assets/images/markdown.jpg
+headerImage: false
+tag:
+- lwn
+- directory
+star: true
+category: blog
+author: sriram
+description: A list of articles that I think are great on LWN
+---
+
+# Why
+LWN.net has a lot of really well-written articles, and I've been collating some great articles for people at different skill levels. The initial inspiration for this was to find articles for an operating systems class I was tutoring.
+
+
+## Introductory Articles
+- [Ulrich Drepper's 7-part series on what every programmer should know about memory](https://lwn.net/Articles/250967/)
+
+
+## Intermediate-Level
+- [Variable-length arrays, pros and cons](https://lwn.net/Articles/749064/)
+- [What if we we used really large pages (> 1 MB) versus the smaller page sizes that we normally use?](https://lwn.net/Articles/374424/])
+- [How can we get more fine-grained security than just having read/write/execute permissions for files? Could we restrict particular applications to only access certain directories?](https://lwn.net/Articles/767137/). See also: the pledge() syscall.
+- [System calls are slow since we need to switch to the OS: can we allow certain syscalls to be implemented in user-space memory? (vDSO)](https://lwn.net/Articles/615809/)
+- [How does a program get run?](https://lwn.net/Articles/631631/)
