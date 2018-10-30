@@ -2,7 +2,7 @@
 title: "Archangel: Matching algorithm for Angel-Mortal games"
 layout: post
 date: 2018-09-29 22:00
-tag: [tembusu, angel, mortal, graph]
+tag: [tembusu, angel-mortal, graph]
 image: null
 headerImage: false
 projects: true

@@ -7,20 +7,34 @@ headerImage: false
 tag:
 - paper-review
 - architecture
-star: true
+- in-order
+- out-of-order
+star: false
 category: blog
 author: sriram
 description: A review of the "Load Slice Core Microarchitecture" paper by Carlson, et al.
 ---
 
-# Paper Review: Load-Slice Core Architecture
-## Authors
-Trevor E. Carlson, Wim Heirman, Osman Allam, Stefanos Kaxiras, Lieven Eeckhout (2015)
+# Paper Review: Load-Slice Core Microarchitecture
+[What is Paper Review?](/about-paperreview)
+
+## Citation
+Carlson, T. E., Heirman, W., Allam, O., Kaxiras, S., & Eeckhout, L. (2015, June). The load slice core microarchitecture. In Computer Architecture (ISCA), 2015 ACM/IEEE 42nd Annual International Symposium on (pp. 272-284). IEEE.
+
+Images in this article are taken from the paper - all credits to the authors.
 
 --------------------------
 
 
 ## Summary 
+
+### An Oversimplified Abstract
+Adding a **second pipeline** (B-IQ in image below) (that handles **memory-related instructions**) to an **in-order processor** makes this new architecture faster than a naive in-order processor (of course), but also makes it **more power and size efficient over a traditional out-of-order processor**.
+
+
+![Load Slice Core](/assets/images/loadslicecore.png)
+
+
 ### Fundamental Premises:
 - Current architectures are out-of-order, superscalar, heavy focus on ILP extraction
 - Useful side effects besides ILP extraction: parallel cache and memory operations are possible
