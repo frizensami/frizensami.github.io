@@ -46,6 +46,9 @@ If we had 4 participants, we should be able to generate a graph like this:
 
 ![Circular Graph](/assets/images/circular-graph.png)
 
+
+[Image Source](https://i.stack.imgur.com/FbEIl.png)
+
 As a convention, when there is an arrow from A to B, this implies that B is A's mortal.
 
 # The context surrounding Archangel
@@ -68,11 +71,15 @@ As seen before, we can represent the final output of this algorithm as a graph. 
 
 ![Edge-heavy Graph](/assets/images/graph-edge-heavy.png){: class="small-image" }
 
+[Image Source](https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Desargues_graph_3color_edge.svg/1200px-Desargues_graph_3color_edge.svg.png)
+
 A valid solution is one where we have a path starting at some vertex that passes through all other vertices and ends back at the initial vertex, also known as the **Hamiltonian path problem**. 
 
 Here, the path is easy to see - just follow the outer circle. We may have to work much harder for a more complex graph. The picture below shows a valid Hamiltonian cycle for a given graph.
 
 ![Hamiltonial Cycle](/assets/images/hamiltonian-cycle.png)
+
+[Image Source](https://i.stack.imgur.com/ndOwT.png)
 
 # Complexity, and how to generate the solution
 
