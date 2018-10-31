@@ -34,6 +34,9 @@ Adding a **second pipeline** (B-IQ in image below) (that handles **memory-relate
 
 ![Load Slice Core](/assets/images/loadslicecore.png)
 
+(Image taken from the research paper)
+
+
 
 ### Fundamental Premises:
 - Current architectures are out-of-order, superscalar, heavy focus on ILP extraction
@@ -55,6 +58,8 @@ Adding a **second pipeline** (B-IQ in image below) (that handles **memory-relate
 This is called the **Load-Slice Core**.
 
 ![Load Slice Core](/assets/images/loadslicecore.png)
+
+(Image taken from the research paper)
 
 ### Results from experiments
 - Increased performance over **in-order** processor by **53%**. Downside: **15% area increase, 22% power increase**. Overall increase in energy-efficiency (**MIPS/Watt**) by **43%**.

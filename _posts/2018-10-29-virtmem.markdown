@@ -35,6 +35,8 @@ Virtual Memory + Paging cause systems that have **a lot of memory** (think 96GB+
 
 ![Direct Segment Summary](/assets/images/direct-segment.png)
 
+(Image taken from the research paper)
+
 ### Fundamental Premises:
 - There are "big-memory" server workloads, imagine a single server with 96GB of RAM
 - If we use small pages (say 4KB), on graph workloads, with a virtual memory + paging system (even without swapping), we could get up to 51% of our execution cycles serving TLB misses alone!
@@ -50,6 +52,8 @@ Virtual Memory + Paging cause systems that have **a lot of memory** (think 96GB+
 
 
 ![Direct Segment Summary](/assets/images/direct-segment.png)
+
+(Image taken from the research paper)
 
 ### Results from experiments
 - For all workloads examined (graph500, memcached, MySQL, NPB:BT, NPB:CG, GUPS) - the **percentage of time spent on TLB miss handling was reduced to less than 0.5%**. 
@@ -69,6 +73,8 @@ The time spent servicing TLB misses reduces as the size of pages in the system i
 
 
 ![Direct Segment Summary](/assets/images/tlb-miss-cost.png)
+
+(Image taken from the research paper)
 
 So why not just keep increasing the page size? 
 
