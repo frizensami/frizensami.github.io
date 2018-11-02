@@ -1,7 +1,7 @@
 ---
-title: "A Random LWN Article"
+title: "A Random LWN Article (Security)"
 layout: post
-date: 2018-11-02 13:06
+date: 2018-11-02 17:30
 image: /assets/images/markdown.jpg
 headerImage: false
 tag:
@@ -10,7 +10,7 @@ tag:
 star: false
 category: blog
 author: sriram
-description: A Random LWN Article
+description: A Random LWN Article (Security)
 ---
 
 
@@ -30,7 +30,7 @@ description: A Random LWN Article
 </style>
 
 
-# Loading Random LWN Kernel Article .....
+# Loading Random LWN Security Article .....
 
 <center>
 <div class="loader"></div>
@@ -45,7 +45,7 @@ description: A Random LWN Article
 <script>
 var regex = /\/Articles\/(.*?)\//g;
 
-$.getJSON('https://allorigins.me/get?url=' + encodeURIComponent('https://lwn.net/Kernel/Index') + '&callback=?', function(data){
+$.getJSON('https://allorigins.me/get?url=' + encodeURIComponent('https://lwn.net/Security/Index') + '&callback=?', function(data){
     var lwn_content = data.contents;
     console.log(lwn_content);
     var matches = lwn_content.match(regex);
