@@ -5,12 +5,13 @@ date: 2018-11-02 17:30
 image: /assets/images/markdown.jpg
 headerImage: false
 tag:
-- haskell
-- optimization
+- lwn
+- random
+- security
 star: false
 category: blog
 author: sriram
-description: A Random LWN Article (Security)
+description: A Random LWN Article (Security Category)
 ---
 
 

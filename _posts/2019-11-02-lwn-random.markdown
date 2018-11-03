@@ -1,16 +1,17 @@
 ---
-title: "A Random LWN Article"
+title: "A Random LWN Article (Kernel)"
 layout: post
 date: 2018-11-02 13:06
 image: /assets/images/markdown.jpg
 headerImage: false
 tag:
-- haskell
-- optimization
+- lwn
+- random
+- kernel
 star: false
 category: blog
 author: sriram
-description: A Random LWN Article
+description: A Random LWN Article (Kernel Category)
 ---
 
 
