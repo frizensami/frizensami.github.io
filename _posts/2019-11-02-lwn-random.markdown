@@ -9,6 +9,7 @@ tag:
 - random
 - kernel
 star: false
+published: false
 category: blog
 author: sriram
 description: A Random LWN Article (Kernel Category)

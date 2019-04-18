@@ -1,0 +1,19 @@
+---
+title: "Learning TLA+ for formal specifications"
+layout: post
+date: 2019-04-18 10:00
+image: /assets/images/markdown.jpg
+headerImage: false
+star: true
+category: blog
+author: sriram
+description: "Learning TLA+ for formal specifications"
+---
+
+
+## Resources
+These are the resources I used to learn TLA+:
+- [Learn TLA+](https://learntla.com/introduction/).
+- [Specifying Systems: Leslie Lamport](https://lamport.azurewebsites.net/tla/book-02-08-08.pdf)
+
+
