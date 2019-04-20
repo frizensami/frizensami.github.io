@@ -18,4 +18,48 @@ These are the resources I used to learn TLA+:
 - [PlusCal User Manual](https://lamport.azurewebsites.net/tla/p-manual.pdf)
 - [Pluscal Language (Examples)](https://lamport.azurewebsites.net/pubs/pluscal.pdf)
 
+## TLA+, PlusCal, TLC, TLA+ Toolbox, and TLAPS,
+**TLA+** is a high-level language used to specify and model systems. It resembles writing a proof in standard mathematics, along with temporal logic operators to specific theorems that change with time. 
 
+Modeling of a 1-bit clock (The canonical example)
+```
+VARIABLE clock
+Init == clock \in {0, 1}
+Tick == IF clock = 0 THEN clock' = 1 ELSE clock' = 0
+
+Spec == Init /\ [][Tick]_<<clock>>
+```
+
+To be read as
+
+```
+Declare a variable called clock
+In the initial state, clock is set to 0 or 1
+During the tick, the clock value goes 0 -> 1 or 1 -> 0
+
+The overall specification: The initial state must be satisfied, 
+                           and (/\) always ([]), we must have a Tick 
+                           or a step where nothing changes.
+```
+
+**PlusCal** is a more familiar language that **transpiles to TLA+**. It is merely a convenience that's used for writing algorithms in TLA+ in a way that reduces effort. For the same example:
+
+```
+-- fair algorithm OneBitClock {
+  variable clock \in {0, 1};
+  {
+    while (TRUE) {
+      if (clock = 0)
+        clock := 1
+      else 
+        clock := 0    
+    }
+  }
+}
+```
+
+**TLC** is the actual model checker used to check TLA+ formulae (like Spec). It checks all possible states using a breadth-first search (to generate the shortest possible error trace) to confirm if the stated invariants hold. It can also be parallelized. 
+
+The **TLA+ Toolbox** is the standard development environment for working with PlusCal / TLA+
+
+**TLAPS (TLA+ Proof System)** is a system for constructing and checking proofs. This is different from the TLA+/PlusCal/TLC system, because those involve searching states one by one. Here, we can prove in the general case from claims and assertions that something is true. 
