@@ -15,5 +15,7 @@ description: "Learning TLA+ for formal specifications"
 These are the resources I used to learn TLA+:
 - [Learn TLA+](https://learntla.com/introduction/).
 - [Specifying Systems: Leslie Lamport](https://lamport.azurewebsites.net/tla/book-02-08-08.pdf)
+- [PlusCal User Manual](https://lamport.azurewebsites.net/tla/p-manual.pdf)
+- [Pluscal Language (Examples)](https://lamport.azurewebsites.net/pubs/pluscal.pdf)
 
 
