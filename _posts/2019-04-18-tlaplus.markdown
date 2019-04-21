@@ -12,16 +12,23 @@ description: "Learning TLA+ for formal specifications"
 
 
 ## Resources
-These are the resources I used to learn TLA+:
+These are the resources I used to learn about TLA+ and the system surrounding it. Examples from these are used throughout this post. 
+
+**TLA+**
 - [Learn TLA+](https://learntla.com/introduction/).
 - [Specifying Systems: Leslie Lamport](https://lamport.azurewebsites.net/tla/book-02-08-08.pdf)
+
+**PlusCal**
 - [PlusCal User Manual](https://lamport.azurewebsites.net/tla/p-manual.pdf)
 - [Pluscal Language (Examples)](https://lamport.azurewebsites.net/pubs/pluscal.pdf)
 
-## TLA+, PlusCal, TLC, TLA+ Toolbox, and TLAPS,
-**TLA+** is a high-level language used to specify and model systems. It resembles writing a proof in standard mathematics, along with temporal logic operators to specific theorems that change with time. 
+**TLAPS**
+- [A Tutorial Introduction to TLAPS](http://tla2014.loria.fr/slides/kriener.pdf)
 
-Modeling of a 1-bit clock (The canonical example)
+## TLA+, PlusCal, TLC, TLA+ Toolbox, and TLAPS,
+**TLA+** is a high-level language used to specify and model systems. It somewhat resembles writing a description of something in standard mathematics, along with temporal logic operators to specific theorems that change with time, and many other language constructs to make writing specifications more precise and straightforward.
+
+Specification of a 1-bit clock (The canonical example):
 ```
 VARIABLE clock
 Init == clock \in {0, 1}
@@ -30,7 +37,7 @@ Tick == IF clock = 0 THEN clock' = 1 ELSE clock' = 0
 Spec == Init /\ [][Tick]_<<clock>>
 ```
 
-To be read as
+To be read as:
 
 ```
 Declare a variable called clock
@@ -42,7 +49,7 @@ The overall specification: The initial state must be satisfied,
                            or a step where nothing changes.
 ```
 
-**PlusCal** is a more familiar language that **transpiles to TLA+**. It is merely a convenience that's used for writing algorithms in TLA+ in a way that reduces effort. For the same example:
+**PlusCal** is a more familiar language that **transpiles to TLA+**. It is a convenience that's used for writing algorithms in TLA+ in a low-effort manner. For the same example:
 
 ```
 -- fair algorithm OneBitClock {
@@ -58,8 +65,51 @@ The overall specification: The initial state must be satisfied,
 }
 ```
 
-**TLC** is the actual model checker used to check TLA+ formulae (like Spec). It checks all possible states using a breadth-first search (to generate the shortest possible error trace) to confirm if the stated invariants hold. It can also be parallelized. 
+The translation of this to TLA+ is:
 
-The **TLA+ Toolbox** is the standard development environment for working with PlusCal / TLA+
+```
+VARIABLE clock
 
-**TLAPS (TLA+ Proof System)** is a system for constructing and checking proofs. This is different from the TLA+/PlusCal/TLC system, because those involve searching states one by one. Here, we can prove in the general case from claims and assertions that something is true. 
+vars == << clock >>
+
+Init == (* Global variables *)
+        /\ clock \in {0, 1}
+
+Next == IF clock = 0
+           THEN /\ clock' = 1
+           ELSE /\ clock' = 0
+
+Spec == /\ Init /\ [][Next]_vars
+        /\ WF_vars(Next)
+```
+
+**TLC** is the actual model checker used to check TLA+ formulae (like Spec). It checks all possible states using a breadth-first search (to generate the shortest possible error trace) to confirm if the stated invariants hold. It can also be parallelized and even distributed across many nodes. 
+
+The **TLA+ Toolbox** is the standard development environment for working with PlusCal / TLA+. I am not aware of any standard setup that works better than the Toolbox, but that would be a good step forward.
+
+**TLAPS (TLA+ Proof System)** is a system for constructing and checking proofs. This is different from the TLA+/PlusCal/TLC system, because those involve searching a finite set of states one by one. Here, we can prove in the general case from claims and assertions that something is true, similar to a precise mathematical proof of a theorem.
+
+This is a proof that for three sequences A, B and C
+
+
+`C ◦ A = C ◦ B =>  A = B`, where `◦` is the concatenation operator.
+```
+THEOREM ConcatLeftCancel :=
+    ASSUME
+        NEW S,
+        NEW A ∈ Seq(S),
+        NEW B ∈ Seq(S),
+        NEW C ∈ Seq(S),
+        C ◦ A = C ◦ B
+    PROVE
+    A = B
+PROOF
+1.1: Len(A) = Len(B) OBVIOUS C ◦ A = C ◦ B
+1.2: A ∈ [1 . . Len(A) → S] OBVIOUS A ∈ Seq(S)
+1.3: B ∈ [1 . . Len(A) → S] BY 1.1
+1.4: ASSUME NEW i ∈ 1 . . Len(A) PROVE A[i] = B[i]
+    2.1: A[i] = (C ◦ A)[i + Len(C)] OBVIOUS (defn of C ◦ A)
+    2.2: B[i] = (C ◦ B)[i + Len(C)] BY 1.1 (defn of C ◦ B)
+    2: QED BY 2.1, 2.2
+1: QED BY 1.2, 1.3, 1.4
+```
