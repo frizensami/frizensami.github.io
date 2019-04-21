@@ -24,6 +24,7 @@ These are the resources I used to learn about TLA+ and the system surrounding it
 
 **TLAPS**
 - [A Tutorial Introduction to TLAPS](http://tla2014.loria.fr/slides/kriener.pdf)
+- [TLA+ and TLAPS syntax](http://lamport.azurewebsites.net/tla/tla2-guide.pdf)
 
 ## TLA+, PlusCal, TLC, TLA+ Toolbox, and TLAPS,
 **TLA+** is a high-level language used to specify and model systems. It somewhat resembles writing a description of something in standard mathematics, along with temporal logic operators to specific theorems that change with time, and many other language constructs to make writing specifications more precise and straightforward.
