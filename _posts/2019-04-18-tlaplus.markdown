@@ -1,5 +1,5 @@
 ---
-title: "Learning TLA+ for formal specifications"
+title: "Learning TLA+ to write formal specifications"
 layout: post
 date: 2019-04-18 10:00
 image: /assets/images/markdown.jpg
@@ -7,7 +7,7 @@ headerImage: false
 star: true
 category: blog
 author: sriram
-description: "Learning TLA+ for formal specifications"
+description: "Learning TLA+ to write formal specifications"
 ---
 
 
