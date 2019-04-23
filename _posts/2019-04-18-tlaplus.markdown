@@ -25,6 +25,8 @@ These are the resources I used to learn about TLA+ and the system surrounding it
 **TLAPS**
 - [A Tutorial Introduction to TLAPS](http://tla2014.loria.fr/slides/kriener.pdf)
 - [TLA+ and TLAPS syntax](http://lamport.azurewebsites.net/tla/tla2-guide.pdf)
+- [How to Write a 21st Century Proof](https://lamport.azurewebsites.net/pubs/proof.pdf)
+- [TLA+ Hyperbook, check the Proof track](http://lamport.azurewebsites.net/tla/hyperbook.html)
 
 ## TLA+, PlusCal, TLC, TLA+ Toolbox, and TLAPS,
 **TLA+** is a high-level language used to specify and model systems. It resembles writing a description of something in more precise mathematics, along with temporal logic operators to specify theorems that change with time (eventually, always...), and many other language constructs to make writing specifications more precise and straightforward.
