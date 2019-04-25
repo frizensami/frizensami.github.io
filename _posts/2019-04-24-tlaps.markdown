@@ -1,0 +1,209 @@
+---
+title: "A beginner's experience with TLAPS (The TLA+ Proof System)"
+layout: post
+date: 2019-04-24 10:00
+image: /assets/images/markdown.jpg
+headerImage: false
+star: true
+category: blog
+author: sriram
+description: "A beginner's experience with TLAPS (The TLA+ Proof System)"
+---
+<!-- TOC depthFrom:2 -->
+
+- [1. Pre-requisite Knowlege and Resources](#1-pre-requisite-knowlege-and-resources)
+- [2. Motivation](#2-motivation)
+- [3. Getting Started](#3-getting-started)
+    - [3.1. Pre-Requisites](#31-pre-requisites)
+    - [3.2. Writing proofs in the TLA+ Toolbox](#32-writing-proofs-in-the-tla-toolbox)
+- [4. The "Hello World" of TLAPS](#4-the-hello-world-of-tlaps)
+    - [4.1. Running these proofs](#41-running-these-proofs)
+- [5. Proving Transitive More-Than relationships](#5-proving-transitive-more-than-relationships)
+- [6. Proving Some Square Root Stuff: Using Operators and Structured Proofs](#6-proving-some-square-root-stuff-using-operators-and-structured-proofs)
+- [Work in progress](#work-in-progress)
+
+<!-- /TOC -->
+
+## 1. Pre-requisite Knowlege and Resources
+- [My initial post on Learning TLA+](https://sriramsami.com/tlaplus/) - to understand the difference between TLA+/PlusCal/TLC (finite state checking) and TLAPS (general proofs)
+- A basic understanding of TLA+ syntax. Even without this knowledge, perhaps the syntax in this post will be self-explanatory. 
+
+## 2. Motivation
+The resources in my first TLA+ post were extremely useful in understanding the TLA+/TLAPS syntax and semantics, but I found each source individually to be either too focused on specific examples or too general. This post will focus on interleaving examples of increasing complexity with the syntactical constructs in the language. 
+
+## 3. Getting Started
+### 3.1. Pre-Requisites 
+- TLA+ Toolbox is installed
+- TLAPS is installed from [binaries](https://tla.msr-inria.inria.fr/tlaps/content/Download/Binaries.html) or source - does not come with the Toolbox.
+
+
+### 3.2. Writing proofs in the TLA+ Toolbox
+1. Open a new specification or .tla file in the TLA+ Toolbox
+2. To prevent complaints from the PlusCal translator, keep an empty algorithm block in the file
+```
+(* --algorithm proof
+begin     
+    skip;
+end algorithm; *)
+```
+3. Alternatively, you can just add the theorems and proofs to an existing .tla file with standard TLA+/PlusCal code, these two systems co-exist and actually benefit from each other
+
+## 4. The "Hello World" of TLAPS
+We're going to force TLAPS to prove `1 + 1 = 2`, a real test of its abilities.
+
+I find there are two **classes** of constructs when using TLAPS:
+1. Theorems (Describing what needs to be proved)
+2. Proofs (Actually proving the active theorem)
+
+For TLAPS, the **theorem** would be written as:
+```
+THEOREM OnePlusOne == 1 + 1 = 2
+```
+
+Here, the **proof** is **obvious**, since it follows from standard mathematical knowledge. So, the proof is written as:
+
+```
+PROOF OBVIOUS
+```
+
+Putting both theorem and proof together, we get:
+
+```
+THEOREM OnePlusOne == 1 + 1 = 2
+PROOF 
+  OBVIOUS
+```
+
+What caused some confusion during the process of learning TLAPS was that:
+- The word "PROOF" is optional
+- Newlines are usually ignored
+
+So the proof above is equivalent to
+
+```
+THEOREM OnePlusOne == 1 + 1 = 2  OBVIOUS
+```
+
+and
+
+```
+THEOREM OnePlusOne == 
+  1 + 1 = 2  
+PROOF OBVIOUS
+```
+etc. 
+
+### 4.1. Running these proofs
+In the TLA+ Toolbox: Use Ctrl + G Ctrl + G to prove a particular step of a theorem. The theorem and its associated steps turn green if the proof backends prove the theorem with the proof that's been given. 
+
+![One Plus One Proof](/assets/images/tlaps/oneplusone.png)
+
+## 5. Proving Transitive More-Than relationships
+We want to prove that if `X > Y` and `Y > Z` then `X > Z + 1`. 
+
+```
+THEOREM Transitive == 
+    ASSUME 
+        NEW X \in Nat,
+        NEW Y \in Nat,
+        NEW Z \in Nat,
+        X > Y,
+        Y > Z
+        PROVE X > Z + 1
+```
+
+Here, we declare 3 new identifiers (X, Y, and Z) and declare their domain to be the Natural numbers (this requires an `EXTENDS Naturals` at the top of the .tla file)
+
+Is this an obvious proof? In general, I try to use PROOF OBVIOUS every time just in case TLAPS can figure out the proof without any additional information. Here, the set of facts available to prove `X > Z + 1` is `X \in Nat`, `Y \in Nat`, `Z \in Nat`, `X > Y`, `Y > Z`. So is TLAPS able to figure this out without any more information? 
+
+![Transitive Proof](/assets/images/tlaps/transitive.png)
+
+Looks like it. Adding `PROOF OBVIOUS` to complete the proof is sufficient for TLAPS in this case. Let's move on to a slightly more complex example. 
+
+## 6. Proving Some Square Root Stuff: Using Operators and Structured Proofs
+We want to prove that 4 and 9 both have a square root. Pretty easy, but we also want to define a generic operator to check if some variable has a square root. Our implementation will be:
+
+```
+HasSqrt(Y) == \E k \in 1..Y : k * k = Y
+```
+Or "Y has a square root if there exists a value k in the range 1 to Y such that k * k is Y".
+
+Let's state our theorem: 
+
+```
+THEOREM TheseHaveSqrt ==
+    ASSUME
+        NEW X \in {4, 9}
+    PROVE HasSqrt(X)
+```
+So our proof here could be stated in one step, but it's a good time to introduce the idea of **structured proofs**. These are multi-line proofs that can have step numbers and refer to each other. Each step is its own **proof obligation**, i.e. something that has to be proven as well, and proofs can be nested inside other proofs. This is too abstract to understand from a description, so here is our example proof for `THEOREM TheseHaveSqrt`.
+
+```
+THEOREM TheseHaveSqrt ==
+    ASSUME
+        NEW X \in {4, 9}
+    PROVE HasSqrt(X)
+PROOF 
+    <1>1 HasSqrt(4) /\ HasSqrt(9) BY DEF HasSqrt
+    <1>2 QED BY <1>1
+```
+
+So here, there is one level of proof (level <1>) and 2 steps within the level. Each step in the proof is either **a step that requires its own proof**, or a **step that requires no proof**. Here, **both steps require their own proof**.
+
+Focusing in on step <1>1:
+
+`<1>1 HasSqrt(4) /\ HasSqrt(9) BY DEF HasSqrt` 
+
+We are asserting that two facts are true: `HasSqrt(4)` AND (/\\\) `HasSqrt(9)`. However, if we were to just say: 
+
+`<1>1 HasSqrt(4) /\ HasSqrt(9) OBVIOUS`
+
+TLAPS would highlight the step in red. 
+
+![HasSqrt Wrong](/assets/images/tlaps/hassqrt-wrong.png)
+
+TLAPS does not **expand definitions by default**. In this case, the back-end provers will see the opaque symbol HasSqrt and have no idea what to do with it. If we check the **Interesting Obligations** window in the TLA+ Toolbox after trying and failing to prove this step, we see this information: 
+
+![HasSqrt Wrong](/assets/images/tlaps/io.png)
+
+What this means is that our three backend provers (zenon, Isabelle, and smt) failed to prove our highlighted obligation (`<1>1 HasSqrt(4) /\ HasSqrt(9) OBVIOUS`). The information sent to the provers was: 
+
+```
+(* SMT failed with status = unknown *)
+ASSUME NEW CONSTANT X \in {4, 9}
+PROVE  HasSqrt(4) /\ HasSqrt(9)
+```
+
+This is an extremely important tool. We can now tell that the backend provers see the operator `HasSqrt` but not the definition behind it. If we were to correct our <1>1 step to: 
+
+`<1>1 HasSqrt(4) /\ HasSqrt(9) BY DEF HasSqrt` 
+
+We would be asking TLAPS to use the expanded definition of HasSqrt, and the information sent to our provers would essentially be: 
+
+```
+ASSUME NEW CONSTANT X \in {4, 9}
+PROVE (\E k \in 1..4 : k * k = 4) /\ (\E k_1 \in 1..9 : k * k = 9)
+```
+
+We wouldn't see this: the **Interesting Obligations** window doesn't show up when something has been successfully proven. This does illustrate the mechanism used by TLAPS to keep the number of facts low: only those that are specifically said to be needed are used for a step. Let's look our our theorem and proof again:
+
+```
+THEOREM TheseHaveSqrt ==
+    ASSUME
+        NEW X \in {4, 9}
+    PROVE HasSqrt(X)
+PROOF 
+    <1>1 HasSqrt(4) /\ HasSqrt(9) BY DEF HasSqrt
+    <1>2 QED BY <1>1
+```
+
+Every structured proof ends with a QED step, which basically brings together all the proof steps in the rest of the structured proof with the goal of proving the current theorem. In our case, saying
+
+```
+<1>2 QED BY <1>1
+```
+Is saying that "We can prove the goal HasSqrt(X) for X in {4, 9} by adding the fact <1>1" into the proof. The QED step itself requires proof (therefore `QED OBVIOUS` is a possible step), in this case, we're saying "Assuming <1>1 is true, we have proved the theorem". Given the wrong facts to QED will cause this step to fail, for e.g. `QED BY X = 5` in this case. Once we correct everything, we get: 
+
+![HasSqrt](/assets/images/tlaps/sqrt.png)
+
+## Work in progress
