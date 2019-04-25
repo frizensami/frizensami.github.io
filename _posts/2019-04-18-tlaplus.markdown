@@ -92,7 +92,7 @@ The **TLA+ Toolbox** is the standard development environment for working with Pl
 
 **TLAPS (TLA+ Proof System)** is a system for constructing and checking proofs. This is different from the TLA+/PlusCal/TLC system, because those involve searching a finite set of states one by one. Here, we can prove in the general case from claims and assertions that something is true, similar to a precise mathematical proof of a theorem.
 
-This needs to be installed separated from the TLA+ Toolbox. Try https://tla.msr-inria.inria.fr/tlaps/content/Download/Binaries.html
+This needs to be instal1led separated from the TLA+ Toolbox. Try [https://tla.msr-inria.inria.fr/tlaps/content/Download/Binaries.html](https://tla.msr-inria.inria.fr/tlaps/content/Download/Binaries.html)
 
 I could not find an example of an extremely simple proof, so here is the simplest one I could write:
 
