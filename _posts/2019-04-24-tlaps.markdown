@@ -96,7 +96,7 @@ PROOF OBVIOUS
 etc. 
 
 ### 4.1. Running these proofs
-In the TLA+ Toolbox: Use Ctrl + G Ctrl + G to prove a particular step of a theorem. The theorem and its associated steps turn green if the proof backends prove the theorem with the proof that's been given. 
+In the TLA+ Toolbox: Use Ctrl+G Ctrl+G to prove a particular step of a theorem. The theorem and its associated steps turn green if the proof backends prove the theorem with the proof that's been given. 
 
 ![One Plus One Proof](/assets/images/tlaps/oneplusone.png)
 
@@ -187,7 +187,7 @@ ASSUME NEW CONSTANT X \in {4, 9}
 PROVE (\E k \in 1..4 : k * k = 4) /\ (\E k_1 \in 1..9 : k * k = 9)
 ```
 
-We wouldn't see this: the **Interesting Obligations** window doesn't show up when something has been successfully proven. This does illustrate the mechanism used by TLAPS to keep the number of facts low: only those that are specifically said to be needed are used for a step. Let's look our our theorem and proof again:
+We wouldn't see this: the **Interesting Obligations** window doesn't show up when something has been successfully proven. This does illustrate the mechanism used by TLAPS to keep the number of facts low: only those that are specifically said to be needed are used for a step. Let's look at our theorem and proof again:
 
 ```
 THEOREM TheseHaveSqrt ==
@@ -238,7 +238,7 @@ THEOREM LinearCombinationDivides ==
         \A x, y \in Nat : Divides((B * x) + (C * y), A)
 ```
 
-This will require a longer structured proof. Simply put: `PROOF OBVIOUS` fails here, citing insufficient facts, as does `PROOF BY DEF Divides`: even an expansion of the definition Divides in not enough for automatic inference of this result. This was the proof that worked for me: 
+This will require a longer structured proof. Simply put: `PROOF OBVIOUS` fails here, citing insufficient facts. One possible proof is: 
 
 ```
 THEOREM LinearCombinationDivides == 
@@ -267,7 +267,7 @@ There are a lot of new concepts, and we will explore them step-wise.
 
 `<1>1  PICK k \in Nat : B = A * k BY DEF Divides`
 
-Step <1>1 states that for the rest of the proof, we are going to `PICK` a value k such that B = A * k, and we state that the reason we can do this is because of the definition of Divides. This makes sense: we said Divides(B, A) which implies B = A * k. Why didn't we say `<1>1  \E k \in Nat : B = A * k BY DEF Divides` instead (`\E` vs `PICK`)? `\E k...` makes the definition of `k` local to only that step, `PICK` makes `k` accessible to the rest of the proof when we include the step elsewhere. Maybe it can be thought of as a private variable (`\E k`) vs a public variable (`PICK k`).
+Step <1>1 states that for the rest of the proof, we are going to `PICK` a value k such that B = A * k, and we state that the reason we can do this is due to the definition of Divides. This makes sense: we said Divides(B, A) which implies B = A * k. Why didn't we say `<1>1  \E k \in Nat : B = A * k BY DEF Divides` instead (`\E` vs `PICK`)? `\E k...` makes the definition of `k` local to only that step, `PICK` makes `k` accessible to the rest of the proof when we include the step elsewhere. Maybe it can be thought of as a private variable (`\E k`) vs a public variable (`PICK k`).
 
 `<1>2  PICK m \in Nat : C = A * m BY DEF Divides`
 
@@ -282,7 +282,9 @@ Step <1>3 is the first **proof-less structured proof step** that we have encount
 In Step <1>4, we say that by adding the step <1>1 (`PICK k \in Nat : B = A * k BY DEF Divides`) to our list of facts for this step, we can prove that `(B * x) = (A * k) * x`, which makes sense since we are just expanding the definition of B. We do this for steps <1>5 and <1>6 for C as well. 
 
 `<1>7  (B * x) + (C * y) = ((A * k) * x) + ((A * m) * y) BY <1>1, <1>2`
+
 `<1>8  ((A * k) * x) + ((A * m) * y) = A * (k * x + m * y) BY <1>7`
+
 `<1>9  (B * x) + (C * y) = A * (k * x + m * y) BY <1>7, <1>8`
 
 The next three steps are basic arithmetic to achieve the form (B * x) + (C * y) = A * (some natural number). After this, only one last step is necessary to complete the proof:
@@ -294,7 +296,7 @@ So using fact <1>9, we are able to finally prove our theorem.
 ![LinearComb](/assets/images/tlaps/linearcomb.png)
 
 ### 7.1. Not following my own advice
-While this example shows the methodical steps behind structured proofs and how to refer to previous steps to prove the current step, TLAPS was actually much smarter than I gave it credit for. I noticed that some steps of my proof were redundant when commenting tem out, and then after I removed, all of them...
+While this example shows the methodical steps behind structured proofs and how to refer to previous steps to prove the current step, TLAPS was actually much smarter than I gave it credit for. I noticed that some steps of my proof were redundant when commenting them out, and then after I removed all of them...
 
 
 ![LinearComb-Obvious](/assets/images/tlaps/linearcomb-obv.png)
