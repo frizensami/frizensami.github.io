@@ -1,6 +1,6 @@
   # main text of home
 name: Sriram Sami
-bio: Working at the intersection of computer science, education, and effective social impact. <br> <br> Graduate Tutor and PhD student in the Sensing, Embedded, and Network Security Group (SENSG) at the National University of Singapore. 
+bio: Interested in the intersection of computer science, education, and effective social impact. <br> <br> Graduate Tutor and PhD student in the Sensing, Embedded, and Network Security Group at the National University of Singapore.
 
 # twitter summary info
 # description: A blog about technology and stuff related
@@ -8,7 +8,7 @@ bio: Working at the intersection of computer science, education, and effective s
 # if it's an external image, update below for true
 # better with square images
 external-image: false
-picture: assets/images/define-true-false-larger.png
+picture: assets/images/me.png
 
 # If you want to include your resume, set to true
 # and specify source (external or local).
@@ -56,7 +56,7 @@ email: sriramsami@u.nus.edu
 # do you want a larger site? change the option below
 # options: [normal, large] | default: normal
 # normal = 560px / large = 810px
-width: normal
+width: large
 
 # if you don't need pagination, comment the *paginate* configs below
 # paginate: 5
