@@ -1,6 +1,6 @@
   # main text of home
 name: Sriram Sami
-bio: Interested in the intersection of computer science, education, and effective social impact. <br> <br> Graduate Tutor and PhD student in the Sensing, Embedded, and Network Security Group at the National University of Singapore.
+bio: Interested in the intersection of <b>sensing security research</b>, <b>education</b>, and <b>effective social impact</b>. <br> <br> <b>Graduate Tutor</b> and <b>PhD student</b> in the <a href="https://www.comp.nus.edu.sg/~junhan/#sensg" target="_blank" >Sensing, Embedded, and Network Security Group</a> at the National University of Singapore.
 
 # twitter summary info
 # description: A blog about technology and stuff related
@@ -63,11 +63,14 @@ width: large
 # paginate_path: "blog/:num/"
 
 # if you don't need projects, comment the *projects* configs below
-projects: true
+# projects: true
 
 # if you don't need "about" or "blog", comment them out below
 # about: true
 blog: true
+
+# Research page
+research: true
 
 # do you want to show the "read time" of the posts?
 read-time: true

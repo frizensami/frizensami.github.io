@@ -1,0 +1,26 @@
+* Why
+  :PROPERTIES:
+  :CUSTOM_ID: why
+  :END:
+
+I've worked on some interesting projects over the years, and I didn't
+find my GitHub readmes and docs to be the best place to list down all
+the design choices and interesting problems along the way for each
+project.
+
+* Backlog
+  :PROPERTIES:
+  :CUSTOM_ID: backlog
+  :END:
+
+-  Tembusu Vertical Marathon controller
+-  Work at Hope Technik (Multi Aircraft + Synchronized Ground Control
+   Station)
+-  Attempt to make an automatic timetable arranging system for NUSMods
+-  Work at Yonah over 2 years
+-  Automatic Washing Machine status detection saga at Tembusu
+-  Haskell Optimization project
+-  Previous research work at A*STAR
+-  More I haven't remembered yet
+
+--------------

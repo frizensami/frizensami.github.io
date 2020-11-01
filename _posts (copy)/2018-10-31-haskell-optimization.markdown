@@ -7,7 +7,7 @@ headerImage: false
 tag:
 - haskell
 - optimization
-star: true
+star: false
 category: blog
 author: sriram
 description: Optimizing a memory-hungry Haskell Program 

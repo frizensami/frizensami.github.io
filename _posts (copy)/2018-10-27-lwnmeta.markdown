@@ -7,7 +7,7 @@ headerImage: false
 tag:
 - lwn
 - directory
-star: true
+star: false
 category: blog
 author: sriram
 description: A list of articles that I think are great on LWN

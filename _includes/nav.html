@@ -34,7 +34,14 @@
             <li class="item">
                 <a class="link" href="{% if site.resume-external %}{{ site.resume-url }}{% else %}{{ site.url }}/{{ site.resume-url }}{% endif %}">Résumé</a>
             </li>
+            {% endif %}
+
+        {% if site.research == true %}
+                <li class="item">
+                    <a class="link" href="{{ site.url }}/research">Research</a>
+                </li>
         {% endif %}
+
 
         {% if site.gpg == true %}
             <li class="item">

@@ -1,19 +1,22 @@
 ---
-title: "List of projects to eventually write about"
+title: "The Project series of posts"
 layout: post
 date: 2018-10-31 12:20
+tag: [projects]
 image: null
 headerImage: false
+projects: true
+hidden: true # don't count this post in blog pagination
 description: "The projects list on this website"
-star: false
-category: blog
+star: true
+category: project
 author: sriram
 externalLink: false
 ---
 
 # Why
 
-I've worked on some interesting projects over the years, and I didn't find my GitHub README and docs to be the best place to list down all the design choices and interesting problems along the way for each project.
+I've worked on some interesting projects over the years, and I didn't find my GitHub readmes and docs to be the best place to list down all the design choices and interesting problems along the way for each project.
 
 # Backlog
 
@@ -21,7 +24,7 @@ I've worked on some interesting projects over the years, and I didn't find my Gi
 - Work at Hope Technik (Multi Aircraft + Synchronized Ground Control Station)
 - Attempt to make an automatic timetable arranging system for NUSMods
 - Work at Yonah over 2 years
-- Automatic Washing Machine status detection saga at Tembusu College
+- Automatic Washing Machine status detection saga at Tembusu
 - Haskell Optimization project
 - Previous research work at A*STAR
 - More I haven't remembered yet

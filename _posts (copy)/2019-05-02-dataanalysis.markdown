@@ -5,7 +5,6 @@ date: 2019-05-02 10:00
 image: /assets/images/markdown.jpg
 headerImage: false
 star: false
-hidden: true
 category: blog
 author: sriram
 description: "Computer Aided Data Analysis: A Conceptual Overview"

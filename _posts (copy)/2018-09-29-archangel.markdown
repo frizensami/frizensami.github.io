@@ -1,12 +1,14 @@
 ---
-title: "Archangel: Graph Matching algorithm for Angel-Mortal-type games"
+title: "Archangel: Matching algorithm for Angel-Mortal games"
 layout: post
 date: 2018-09-29 22:00
 tag: [tembusu, angel-mortal, graph]
 image: null
 headerImage: false
-description: "Graph matching algorithm for Angel-Mortal-type games"
-category: blog
+projects: true
+hidden: true # don't count this post in blog pagination
+description: "Matching algorithm for Angel-Mortal games"
+category: project
 author: sriram
 externalLink: false
 ---
@@ -16,7 +18,7 @@ externalLink: false
 
 # Summary
 
-An "Angel-Mortal" game is a gift-giving game played by a number of participants over a few weeks. The point of the game is for participants to give gifts to people and also be given gifts from people - essentially a circle of goodwill. 
+An "Angel-Mortal" game is something played by a number of participants over a few weeks. The point of the game is for participants to give gifts to people and also be given gifts from people - essentially a circle of goodwill. 
 
 The **Archangel** project is a fun little piece of software I developed to **facilitate the organization of these games** (because it's actually a hard CS problem!). It can be found at [my GitHub page for Archangel](https://github.com/frizensami/archangel).
 

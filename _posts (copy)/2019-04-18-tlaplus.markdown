@@ -1,0 +1,130 @@
+---
+title: "Learning TLA+ to write formal specifications"
+layout: post
+date: 2019-04-18 10:00
+image: /assets/images/markdown.jpg
+headerImage: false
+star: true
+category: blog
+author: sriram
+description: "Learning TLA+ to write formal specifications"
+---
+
+
+## Resources
+These are the resources I used to learn about TLA+ and the system surrounding it. Examples from these are used throughout this post. 
+
+**TLA+**
+- [Learn TLA+](https://learntla.com/introduction/).
+- [Specifying Systems: Leslie Lamport](https://lamport.azurewebsites.net/tla/book-02-08-08.pdf)
+
+**PlusCal**
+- [PlusCal User Manual](https://lamport.azurewebsites.net/tla/p-manual.pdf)
+- [Pluscal Language (Examples)](https://lamport.azurewebsites.net/pubs/pluscal.pdf)
+
+**TLAPS**
+- [A Tutorial Introduction to TLAPS](http://tla2014.loria.fr/slides/kriener.pdf)
+- [TLA+ and TLAPS syntax](http://lamport.azurewebsites.net/tla/tla2-guide.pdf)
+- [How to Write a 21st Century Proof](https://lamport.azurewebsites.net/pubs/proof.pdf)
+- [TLA+ Hyperbook, check the Proof track](http://lamport.azurewebsites.net/tla/hyperbook.html)
+
+## TLA+, PlusCal, TLC, TLA+ Toolbox, and TLAPS,
+**TLA+** is a high-level language used to specify and model systems. It resembles writing a description of something in more precise mathematics, along with temporal logic operators to specify theorems that change with time (eventually, always...), and many other language constructs to make writing specifications more precise and straightforward.
+
+Specification of a 1-bit clock (The canonical example):
+```
+VARIABLE clock
+Init == clock \in {0, 1}
+Tick == IF clock = 0 THEN clock' = 1 ELSE clock' = 0
+
+Spec == Init /\ [][Tick]_<<clock>>
+```
+
+To be read as:
+
+```
+Declare a variable called clock
+In the initial state, clock is set to 0 or 1
+During the tick, the clock value goes 0 -> 1 or 1 -> 0
+
+The overall specification: The initial state must be satisfied, 
+                           and (/\) always ([]), we must have a Tick 
+                           or a step where nothing changes.
+```
+
+**PlusCal** is a more familiar language that **transpiles to TLA+**. It is a convenience that's used for writing algorithms in TLA+ in a low-effort manner. For the same example:
+
+```
+-- fair algorithm OneBitClock {
+  variable clock \in {0, 1};
+  {
+    while (TRUE) {
+      if (clock = 0)
+        clock := 1
+      else 
+        clock := 0    
+    }
+  }
+}
+```
+
+The translation of this to TLA+ is:
+
+```
+VARIABLE clock
+
+vars == << clock >>
+
+Init == (* Global variables *)
+        /\ clock \in {0, 1}
+
+Next == IF clock = 0
+           THEN /\ clock' = 1
+           ELSE /\ clock' = 0
+
+Spec == /\ Init /\ [][Next]_vars
+        /\ WF_vars(Next)
+```
+
+**TLC** is the actual model checker used to check TLA+ formulae (like Spec). It checks all possible states using a breadth-first search (to generate the shortest possible error trace) to confirm if the stated invariants hold. It can also be parallelized and even distributed across many nodes. 
+
+The **TLA+ Toolbox** is the standard development environment for working with PlusCal / TLA+. I am not aware of any standard setup that works better than the Toolbox, but that would be a good step forward.
+
+**TLAPS (TLA+ Proof System)** is a system for constructing and checking proofs. This is different from the TLA+/PlusCal/TLC system, because those involve searching a finite set of states one by one. Here, we can prove in the general case from claims and assertions that something is true, similar to a precise mathematical proof of a theorem.
+
+This needs to be instal1led separated from the TLA+ Toolbox. Try [https://tla.msr-inria.inria.fr/tlaps/content/Download/Binaries.html](https://tla.msr-inria.inria.fr/tlaps/content/Download/Binaries.html)
+
+I could not find an example of an extremely simple proof, so here is the simplest one I could write:
+
+```
+THEOREM OnePlusOne == 1 + 1 = 2
+    OBVIOUS
+```
+
+This step is obvious, and TLAPS agrees. 
+
+Below is a proof that for three sequences A, B and C:
+
+`C ◦ A = C ◦ B =>  A = B`
+
+ where `◦` is the concatenation operator.
+```
+THEOREM ConcatLeftCancel :=
+    ASSUME
+        NEW S,
+        NEW A ∈ Seq(S),
+        NEW B ∈ Seq(S),
+        NEW C ∈ Seq(S),
+        C ◦ A = C ◦ B
+    PROVE
+    A = B
+PROOF
+1.1: Len(A) = Len(B) OBVIOUS C ◦ A = C ◦ B
+1.2: A ∈ [1 . . Len(A) → S] OBVIOUS A ∈ Seq(S)
+1.3: B ∈ [1 . . Len(A) → S] BY 1.1
+1.4: ASSUME NEW i ∈ 1 . . Len(A) PROVE A[i] = B[i]
+    2.1: A[i] = (C ◦ A)[i + Len(C)] OBVIOUS (defn of C ◦ A)
+    2.2: B[i] = (C ◦ B)[i + Len(C)] BY 1.1 (defn of C ◦ B)
+    2: QED BY 2.1, 2.2
+1: QED BY 1.2, 1.3, 1.4
+```
