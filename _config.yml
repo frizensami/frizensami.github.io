@@ -1,8 +1,6 @@
   # main text of home
 name: Sriram Sami
-bio: Interested in the intersection of <b>sensing security research</b>, <b>education</b>, and <b>effective social impact</b>. <br> <br> <b>Graduate Tutor</b> and <b>PhD student</b> in the <a href="https://www.comp.nus.edu.sg/~junhan/#sensg" target="_blank" >Sensing, Embedded, and Network Security Group</a> at the National University of Singapore.
-
-# twitter summary info
+bio: <b>Graduate Tutor</b> and <b>PhD candidate</b> at the <br> National University of Singapore. <br><br> Part of both the <a href="http://www.junhan.org/#cyphy" target="_blank">Cyber-Physical Systems and Security</a> (CyPhy) research group (with <a href="http://www.junhan.org/"> Prof. Jun Han</a>) and the <a href="https://www.cir.nus.edu.sg/" target="_blank">Communication and Internet Research</a> (CIR) research group (with <a href="https://www.comp.nus.edu.sg/~chanmc/"> Prof. Chan Mun Choon</a>). <br> <br> Interested in the intersection of <b><a href="/research" target="_blank"> active sensing security research</a></b>, <b>education</b>, and <b>effective social impact</b>. <br> <br>  # twitter summary inf
 # description: A blog about technology and stuff related
 
 # if it's an external image, update below for true
@@ -12,9 +10,9 @@ picture: assets/images/me.png
 
 # If you want to include your resume, set to true
 # and specify source (external or local).
-#resume: true
+resume: true
+resume-url: assets/cv.pdf
 #resume-external: true
-#resume-url: https://www.linkedin.com/in/sriram-sami-965b3337/
 
 url: https://sriramsami.com
 # your url: http://USERNAME.github.io
