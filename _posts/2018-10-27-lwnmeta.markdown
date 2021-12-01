@@ -1,5 +1,5 @@
 ---
-title: "A Directory of LWN Articles I Like"
+title: "My Favorite LWN Articles"
 layout: post
 date: 2018-10-27 12:24
 image: /assets/images/markdown.jpg

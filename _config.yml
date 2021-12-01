@@ -1,7 +1,11 @@
   # main text of home
 name: Sriram Sami
-bio: <b>Graduate Tutor</b> and <b>PhD candidate</b> at the <br> National University of Singapore. <br><br> Part of the <a href="http://www.junhan.org/#cyphy" target="_blank">Cyber-Physical Systems and Security</a> (CyPhy) research group (with <a href="http://www.junhan.org/"> Prof. Jun Han</a>) and the <a href="https://www.cir.nus.edu.sg/" target="_blank">Communication and Internet Research</a> (CIR) research group (with <a href="https://www.comp.nus.edu.sg/~chanmc/"> Prof. Chan Mun Choon</a>). <br> <br> Interested in the intersection of <b>active sensing security research</b>, <b>education</b>, and <b>effective social impact</b>. <br> <br>  # twitter summary inf
-# description: A blog about technology and stuff related
+bio: I am a Computer Science PhD candidate the National University of Singapore. <br><br> My current research focus is <strong> security and privacy issues </strong> and <strong> novel use-cases </strong> for <strong> active sensors </strong> (LIDARs, time-of-flight sensors, etc) </b>.
+
+bioext: I am part of the <a href="https://www.cyphy-lab.org/" target="_blank">Cyber-Physical Systems and Security</a> <strong> (CyPhy)</strong> and <a href="https://www.cir.nus.edu.sg/" target="_blank">Communication and Internet Research</a><strong> (CIR) </strong> research groups. <br> <br>
+
+
+description: Sriram Sami
 
 # if it's an external image, update below for true
 # better with square images
@@ -37,7 +41,7 @@ disqus:
 # google: mygoogle
 # instagram: myinstagram
 # pinterest: mypinterest
-linkedin: sriram-sami-965b3337
+linkedin: sriramsami
 # youtube: myyoutube
 # spotify: myspotify
 github: frizensami
