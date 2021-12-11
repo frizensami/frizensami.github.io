@@ -4,7 +4,7 @@ layout: post
 date: 2019-04-18 10:00
 image: /assets/images/markdown.jpg
 headerImage: false
-star: true
+star: false
 category: blog
 author: sriram
 description: "Learning TLA+ to write formal specifications"

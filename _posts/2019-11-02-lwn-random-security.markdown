@@ -1,5 +1,5 @@
 ---
-title: "A Random LWN Article (Security)"
+title: "Go to a Random LWN (Linux Weekly News) Article on Security"
 layout: post
 date: 2018-11-02 17:30
 image: /assets/images/markdown.jpg
@@ -9,7 +9,7 @@ tag:
 - random
 - security
 star: false
-published: false
+published: true
 category: blog
 author: sriram
 description: A Random LWN Article (Security Category)
@@ -74,7 +74,7 @@ function add_time(element_id, time) {
 
 change_color('l1', 'orange');
 var start_retrieve = performance.now();
-$.getJSON('https://allorigins.me/get?url=' + encodeURIComponent('https://lwn.net/Security/Index') + '&callback=?', function(data){
+$.getJSON('http://api.allorigins.win/get?url=' + encodeURIComponent('https://lwn.net/Security/Index') + '&callback=?', function(data){
     var end_retrieve = performance.now();
     change_color('l1', 'green');
     change_color('l2', 'orange');
@@ -94,7 +94,7 @@ $.getJSON('https://allorigins.me/get?url=' + encodeURIComponent('https://lwn.net
     change_color('l3', 'green');
 
     var button = document.getElementById('go');
-    button.onclick = function() { window.location = "https://lwn.net" + matches[rand_int]; };
+    button.onclick = function() { window.open("https://lwn.net" + matches[rand_int] , '_blank'); };
     button.disabled = false;
     var loader = document.getElementById('loader');
     loader.parentNode.removeChild(loader);
