@@ -1,5 +1,5 @@
 ---
-title: "I Don't Understand Singapore's Blood Supply Fluctuations"
+title: "Singapore's Blood Supply Fluctuations"
 layout: post
 date: 2022-01-19 12:26
 image: /assets/images/markdown.jpg
@@ -10,8 +10,8 @@ tag:
     - data-analysis
     - scraping
 star: true
-published: false
-category: blog
+published: true
+category: test
 author: sriram
 description:
 ---

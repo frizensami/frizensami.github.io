@@ -1,111 +1,110 @@
   # main text of home
-name: Sriram Sami
-bio: I am a Computer Science PhD candidate at the National University of Singapore. <br><br> My current research focuses on <strong> security and privacy issues </strong> and <strong> novel use-cases </strong> for <strong> active sensors </strong> (LIDARs, time-of-flight sensors, etc) </b>.
+  name: Sriram Sami
+  bio: I am a Computer Science PhD candidate at the National University of Singapore. <br><br> My current research focuses on <strong> security and privacy issues </strong> and <strong> novel use-cases </strong> for <strong> active sensors </strong> (LIDARs, time-of-flight sensors, etc) </b>.
 
-bioext: I am part of the <a href="https://www.cyphy-lab.org/" target="_blank">Cyber-Physical Systems and Security</a> <strong> (CyPhy)</strong> and <a href="https://www.cir.nus.edu.sg/" target="_blank">Communication and Internet Research</a><strong> (CIR) </strong> research groups. <br> <br>
+  bioext: I am part of the <a href="https://www.cyphy-lab.org/" target="_blank">Cyber-Physical Systems and Security</a> <strong> (CyPhy)</strong> and <a href="https://www.cir.nus.edu.sg/" target="_blank">Communication and Internet Research</a><strong> (CIR) </strong> research groups. <br> <br>
 
+  description: Sriram Sami
 
-description: Sriram Sami
+  # if it's an external image, update below for true
+  # better with square images
+  external-image: false
+  picture: assets/images/me.png
 
-# if it's an external image, update below for true
-# better with square images
-external-image: false
-picture: assets/images/me.png
+  # If you want to include your resume, set to true
+  # and specify source (external or local).
+  resume: true
+  resume-url: assets/cv.pdf
+  #resume-external: true
 
-# If you want to include your resume, set to true
-# and specify source (external or local).
-resume: true
-resume-url: assets/cv.pdf
-#resume-external: true
+  url: https://sriramsami.com
+  # your url: http://USERNAME.github.io
 
-url: https://sriramsami.com
-# your url: http://USERNAME.github.io
+  permalink: /:title/
 
-permalink: /:title/
+  # To enable google analytics, supply your token below
+  analytics-google: "UA-126704116-1"
 
-# To enable google analytics, supply your token below
-analytics-google: 'UA-126704116-1'
+  # To enable piwik tracking, supply your url & site ID below
+  # analytics-piwik-url: 'piwik.my-host.com'
+  # analytics-piwik-id: 1
 
-# To enable piwik tracking, supply your url & site ID below
-# analytics-piwik-url: 'piwik.my-host.com'
-# analytics-piwik-id: 1
+  # if you don't want comments in your posts, leave categories empty
+  # disqus:
+  # shortname: sriramsami # enter this from your disqus account
+  # categories: [blog, project, test] #[blog, project] # only show disqus for posts that have these categories
 
-# if you don't want comments in your posts, leave categories empty
-disqus:
-  shortname: sriramsami # enter this from your disqus account
-  categories: [blog, project] #[blog, project] # only show disqus for posts that have these categories
+  # if you don't have any of social below, comment the line
+  # facebook: frizensami
+  # twitter: mytwitter
+  # google: mygoogle
+  # instagram: myinstagram
+  # pinterest: mypinterest
+  linkedin: sriramsami
+  # youtube: myyoutube
+  # spotify: myspotify
+  github: frizensami
+  # gitlab: mygitlab
+  # lastfm: mylastfm
+  # stackoverflow: 7044681/mystackoverflow
+  # quora: userquora
+  # reddit: username
+  #medium: medium
+  # vimeo: myvimeo
+  # lanyrd: mylanyrd
+  email: sriramsami@u.nus.edu
 
-# if you don't have any of social below, comment the line
-# facebook: frizensami
-# twitter: mytwitter
-# google: mygoogle
-# instagram: myinstagram
-# pinterest: mypinterest
-linkedin: sriramsami
-# youtube: myyoutube
-# spotify: myspotify
-github: frizensami
-# gitlab: mygitlab
-# lastfm: mylastfm
-# stackoverflow: 7044681/mystackoverflow
-# quora: userquora
-# reddit: username
-#medium: medium
-# vimeo: myvimeo
-# lanyrd: mylanyrd
-email: sriramsami@u.nus.edu
+  # do you want a larger site? change the option below
+  # options: [normal, large] | default: normal
+  # normal = 560px / large = 810px
+  width: large
 
-# do you want a larger site? change the option below
-# options: [normal, large] | default: normal
-# normal = 560px / large = 810px
-width: large
+  # if you don't need pagination, comment the *paginate* configs below
+  # paginate: 5
+  # paginate_path: "blog/:num/"
 
-# if you don't need pagination, comment the *paginate* configs below
-# paginate: 5
-# paginate_path: "blog/:num/"
+  # if you don't need projects, comment the *projects* configs below
+  # projects: true
 
-# if you don't need projects, comment the *projects* configs below
-# projects: true
+  # if you don't need "about" or "blog", comment them out below
+  # about: true
+  blog: true
 
-# if you don't need "about" or "blog", comment them out below
-# about: true
-blog: true
+  # Research page
+  research: true
 
-# Research page
-research: true
+  # do you want to show the "read time" of the posts?
+  read-time: true
 
-# do you want to show the "read time" of the posts?
-read-time: true
+  # do you want to show the "tags" inside the posts?
+  show-tags: true
 
-# do you want to show the "tags" inside the posts?
-show-tags: true
+  # related posts inside a post?
+  related: true
 
-# related posts inside a post?
-related: true
+  # Include a GPG key?
+  gpg: true
+  gpg-url: frizensami-public-pgp.key
 
-# Include a GPG key?
-gpg: true
-gpg-url: frizensami-public-pgp.key
+  # Include a GPG key?
+  ssh: true
+  ssh-url: frizensami-public-ssh.key
 
-# Include a GPG key?
-ssh: true
-ssh-url: frizensami-public-ssh.key
+  # Display links for next and previous posts for the specified categories
+  post-advance-links: [blog]
 
-# Display links for next and previous posts for the specified categories
-post-advance-links: [blog]
+  # show author block at the end of a post ?
+  # show-author: true
 
-# show author block at the end of a post ?
-# show-author: true
+  # do you want some animations?
+  animation: true
 
-# do you want some animations?
-animation: true
+  plugins:
+      - jekyll-seo-tag
+      - jekyll-gist
+      # - jekyll-feed
+      - jemoji
+      # - jekyll-admin
 
-plugins:
-  - jekyll-seo-tag
-  - jekyll-gist
-  - jekyll-feed
-  - jemoji
-  - jekyll-admin
-
-jekyll-mentions:
-    base_url: https://github.com
+  jekyll-mentions:
+      base_url: https://github.com
