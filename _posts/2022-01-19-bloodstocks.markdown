@@ -10,7 +10,7 @@ tag:
     - data-analysis
     - scraping
 star: true
-published: true
+published: false
 category: blog
 author: sriram
 description:
