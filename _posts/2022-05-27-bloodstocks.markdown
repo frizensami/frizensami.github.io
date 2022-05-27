@@ -1,5 +1,5 @@
 ---
-title: "(Maybe) Tracking Singapore's Blood Supply Fluctuations"
+title: "(Maybe) Tracking Singapore's Blood Stock Fluctuations"
 layout: post
 date: 2022-05-26 12:26
 image: /assets/images/markdown.jpg
