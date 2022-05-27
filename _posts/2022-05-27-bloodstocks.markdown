@@ -32,15 +32,14 @@ If you're on mobile, you can press and hold on this image and open it in a new t
 
 **Table of Contents**
 
--   [TLDR](#tldr)
 -   [Disclaimers](#disclaimers)
 -   [Why did I do this?](#why-did-i-do-this)
 -   [Where do I get exact blood stock levels?](#where-do-i-get-exact-blood-stock-levels)
 -   [Is this okay?](#is-this-okay)
 -   [Overview of the data](#overview-of-the-data)
--   [Downloading and plotting](#downloading-and-plotting)
--   [Graph format and data frequency](#graph-format-and-data-frequency)
--   [Some questions](#some-questions)
+    -   [Downloading and plotting](#downloading-and-plotting)
+    -   [Graph format and data frequency](#graph-format-and-data-frequency)
+    -   [Some questions](#some-questions)
 -   [Wrapping up](#wrapping-up)
 -   [Resources](#resources)
 
