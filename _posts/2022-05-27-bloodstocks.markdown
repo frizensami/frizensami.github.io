@@ -13,7 +13,6 @@ star: true
 published: true
 category: blog
 author: sriram
-description: asdf
 ---
 
 ## TLDR
