@@ -15,6 +15,8 @@ category: blog
 author: sriram
 ---
 
+<span style="color:red"> **Latest update: Nov 21 2022** </span>
+
 ## TLDR
 
 1. I wrote a Telegram bot to track Singapore's blood stock levels ([@sgbloodstocksbot](https://t.me/sgbloodstocksbot){:target="\_blank" rel="noopener"}). Users can subscribe to the bot to be notified about changes in their blood type's stock levels (or any changes at all).
@@ -22,7 +24,7 @@ author: sriram
 
 {:refdef: style="text-align: center;"}
 
-![Graph of Singapore Blood Stocks since June 2021](/assets/images/bloodstocks/bloodstocks-jun21-aug22.png){:height="auto"}
+![Graph of Singapore Blood Stocks since June 2021](/assets/images/bloodstocks/bloodstocks.png){:height="auto"}
 
 If you're on mobile, you can press and hold on this image and open it in a new tab.
 {: refdef}
@@ -111,7 +113,7 @@ I get asked sometimes if the blood stock levels are sensitive information and wh
 The blood stock data is stored in [this repository](https://github.com/datascapesg/red-cross-blood-stocks){:target="\_blank" rel="noopener"}, but each update is a separate [git commit](https://www.atlassian.com/git/tutorials/saving-changes/git-commit){:target="\_blank" rel="noopener"}. We first have to download all versions of `blood-stocks.json` across all commits. The code to download and analyze the most up-to-date data is [here](https://github.com/frizensami/bloodstock_analysis){:target="\_blank" rel="noopener"}, feel free to give it a go!
 
 {:refdef: style="text-align: center;"}
-![Graph of Singapore Blood Stocks](/assets/images/bloodstocks/bloodstocks-jun21-aug22.png){:height="auto"}
+![Graph of Singapore Blood Stocks](/assets/images/bloodstocks/bloodstocks.png){:height="auto"}
 If you're on mobile, you can press and hold on this image and open it in a new tab.
 {: refdef}
 
