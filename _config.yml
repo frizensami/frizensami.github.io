@@ -23,7 +23,8 @@
   permalink: /:title/
 
   # To enable google analytics, supply your token below
-  analytics-google: "UA-126704116-1"
+  # Originally "UA-126704116-1"
+  analytics-google: "G-37TR9Q8T8Q"
 
   # To enable piwik tracking, supply your url & site ID below
   # analytics-piwik-url: 'piwik.my-host.com'
