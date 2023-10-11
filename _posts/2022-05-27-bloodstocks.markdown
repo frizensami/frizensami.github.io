@@ -15,7 +15,9 @@ category: blog
 author: sriram
 ---
 
-<span style="color:red"> **Latest update: Nov 21 2022** </span>
+<span style="color:red"> **Latest update: Oct 11 2023** </span>
+<br/>
+<span style="color:red"> The Red Cross website was redesigned so the technique I use has changed. Howver, this post is not yet updated with that information. </span>
 
 ## TLDR
 
@@ -33,16 +35,17 @@ If you're on mobile, you can press and hold on this image and open it in a new t
 
 **Table of Contents**
 
--   [Disclaimers](#disclaimers)
--   [Why did I do this?](#why-did-i-do-this)
--   [Where do I get exact blood stock levels?](#where-do-i-get-exact-blood-stock-levels)
--   [Is this okay?](#is-this-okay)
--   [Overview of the data](#overview-of-the-data)
-    -   [Downloading and plotting](#downloading-and-plotting)
-    -   [Graph format and data frequency](#graph-format-and-data-frequency)
-    -   [Some questions](#some-questions)
--   [Wrapping up](#wrapping-up)
--   [Resources](#resources)
+- [TLDR](#tldr)
+- [Disclaimers](#disclaimers)
+- [Why did I do this?](#why-did-i-do-this)
+- [Where do I get exact blood stock levels?](#where-do-i-get-exact-blood-stock-levels)
+  - [Is this okay?](#is-this-okay)
+- [Overview of the data](#overview-of-the-data)
+  - [Downloading and plotting](#downloading-and-plotting)
+  - [Graph format and data frequency](#graph-format-and-data-frequency)
+  - [Some questions](#some-questions)
+- [Wrapping up](#wrapping-up)
+- [Resources](#resources)
 
 <!-- markdown-toc end -->
 
@@ -63,6 +66,8 @@ I decided to make a Telegram bot [(try @sgbloodstocksbot here!)](https://t.me/sg
 I then heard about [Datascape Singapore](https://github.com/datascapesg/){:target="\_blank" rel="noopener"}, a project to save Singapore-related data into ["Flat Data" files on GitHub](https://next.github.com/projects/flat-data){:target="\_blank" rel="noopener"}. I used the same code from the Telegram bot to scrape and **save the blood stock data daily**, from 14th June 2021 onward, into [this repository](https://github.com/datascapesg/red-cross-blood-stocks){:target="\_blank" rel="noopener"} (see `blood-stocks.json` for the latest scraped data).
 
 ## Where do I get exact blood stock levels?
+
+<span style="color:red"> The Red Cross website was redesigned so the technique I use has changed. Howver, this post is not yet updated with that information. This section is outdated, but hopefully still interesting. </span>
 
 This is where the (maybe) comes from. There is no official API or data source that I am aware of, so scraping is the only option. The Red Cross reports blood stock levels like this on their website:
 
