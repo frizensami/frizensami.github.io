@@ -1,0 +1,29 @@
+---
+title: "LAPD: Laser-Assisted Photography Detection"
+layout: post
+tag: [research, time-of-flight, smartphone, hidden-camera]
+projects: true
+image: null
+hide_date: true 
+headerImage: false
+#hidden: true 
+description: "A novel hidden camera detection and localization system that leverages the time-of-flight (ToF) sensor on commodity smartphones."
+category: project
+author: sriram
+externalLink: false
+---
+
+
+
+# Overview
+
+LAPD (at <a href="https://github.com/frizensami/lapd" target="_blank">github.com/frizensami/lapd/</a>) is my research project to detect hidden cameras with just a smartphone. We created a smartphone app on Android that emits laser signals from the time-of-flight (ToF) sensor on certain smartphones, and uses computer vision and machine learning techniques to locate the unique reflections from hidden cameras.
+
+Most of the information about LAPD can be found on my [research page](/research). However, I thought it might be interesting to describe some of the interesting quirks of the project.
+
+
+# Interesting things
+
+- Perhaps surprisingly, our biggest issue was Android's augmented reality framework (ARCore). We added this to the project since we needed to know the 3D positions of objects around the smartphone, so that we could calculate angles, distances, etc. However, we couldn't access the raw data from the ToF sensor while ARCore was running, so we ended up with a nerfed version of ARCore that we had to implement many, many bandaids on.
+  - Just as an indication of how powerless we are with ARCore, here's [an issue](https://github.com/google-ar/arcore-android-sdk/issues/153) on the ARCore GitHub repo that's been open for many years about a simple issue, with many people chiming in, yet with no response. 
+- We also had to manually align the ToF sensor with the camera sensor, since the ToF sensor is not aligned with the camera sensor on most smartphones. The funny part is that the "standard computer vision approach" is to use a checkerboard pattern, but that has two issues: (a) the checkboard looks different from the PoV of the ToF sensor vs the normal camera, and (b) we somehow could not get this as accurate as just asking the user to calibrate it by inputting two numbers to align the scaling and offset of the two images.

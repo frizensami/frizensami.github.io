@@ -4,13 +4,17 @@ title: Projects
 ---
 
 <h1 style="text-align: center; margin-top: 5rem; margin-bottom: 1rem" class="animated"> Projects </h1>
+
+<h3 style="text-align: center; margin-top: 5rem; margin-bottom: 1rem; font-weight: 200" class="animated"> This page has some of my projects that I'm particularly proud of, <br/> or those that have interesting details that I'd like to highlight. </h3>
+
 <section class="list">
     {% for post in site.posts %}
         {% if post.projects %}
             <div class="item {% if post.star %}star{% endif %}">
                 <a class="url" href="{% if post.externalLink %}{{ post.externalLink }}{% else %}{{ site.url }}{{ post.url }}{% endif %}">
-                    <aside><time datetime="{{ post.date | date:"%d-%m-%Y" }}">{{ post.date | date: "%b %d %Y" }}</time></aside>
-                    <h3 class="title">{{ post.title }}</h3>
+                    <!-- <aside><time datetime="{{ post.date | date:"%d-%m-%Y" }}">{{ post.date | date: "%b %d %Y" }}</time></aside> --> 
+                    <h2 style="color: #3366CC" class="title"><strong>{{ post.title }}</strong></h2>
+                    <p style="font-weight: 300">{{ post.description }}</p>
                 </a>
             </div>
         {% endif %}

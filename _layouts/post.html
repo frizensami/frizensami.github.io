@@ -8,10 +8,12 @@ layout: page
 
 <h1 class="title">{{ page.title }}</h1>
 
+{% unless page.hide_date %}
 <span class="date">
     <time datetime="{{ page.date | date:"%d-%m-%Y" }}">{{ page.date | date: "%A. %B %d, %Y" }}</time>
     {% if site.read-time %} - {% include read-time.html %}{% endif %}
 </span>
+{% endunless %}
 
 {% if site.show-tags %}
     <div class="post-tags">
