@@ -1,0 +1,34 @@
+# GitHub action that runs daily
+# Runs the `scripts/bloodstocks.js` script and saves the stdout in `assets/blood.json`
+# Also should allow updating the file manually via the Actions tab
+
+name: Get Stocks
+
+on:
+  # Run daily
+  schedule:
+    - cron: "0 0 * * *"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Run script
+        run: node scripts/bloodstocks.js
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: blood
+          path: assets/blood-test.json
+          
