@@ -26,9 +26,174 @@ author: sriram
 
 {:refdef: style="text-align: center;"}
 
-![Graph of Singapore Blood Stocks since June 2021](/assets/images/bloodstocks/bloodstocks.png){:height="auto"}
+<!-- ![Graph of Singapore Blood Stocks since June 2021](/assets/images/bloodstocks/bloodstocks.png){:height="auto"} -->
 
-If you're on mobile, you can press and hold on this image and open it in a new tab.
+<!-- Dynamically generate a graph of blood stocks using Plotly. The data is in assets/blood.json -->
+<!-- The data format is a list of dictionaries, each dict has structure e.g., {"date":"2024-03-06","bloodType":"A+","fillLevel":83} -->
+
+<!-- Plot three subplots: (1) all the blood stocks (2) just the positive blood types (3) just the negative blood types -->
+<!-- Reuse as much code as possible. Also, display any other graphs you think are useful.  -->
+
+### Interactive Graphs
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div id="blood-stocks-graph"></div>
+<script>
+  async function plotGraph(id, filterFn, title) {
+    const response = await fetch('/assets/blood.json');
+    const data = await response.json();
+    const filteredData = data.filter(filterFn);
+    const bloodTypes = [...new Set(filteredData.map(d => d.bloodType))];
+    const traces = bloodTypes.map(bloodType => ({
+      x: filteredData.filter(d => d.bloodType === bloodType).map(d => d.date),
+      y: filteredData.filter(d => d.bloodType === bloodType).map(d => d.fillLevel),
+      mode: 'lines',
+      name: bloodType
+    }));
+    const layout = {
+      title: title,
+      xaxis: {
+        title: 'Date',
+        tickformat: '%b %Y',
+        type: 'date',
+        rangemode: 'tozero'
+      },
+      yaxis: {
+        title: 'Fill Level (%)'
+      }
+    };
+    Plotly.newPlot(id, traces, layout);
+  }
+  async function plotSubplots() {
+    const response = await fetch('/assets/blood.json');
+    const data = await response.json();
+    const bloodTypes = [...new Set(data.map(d => d.bloodType))];
+    const positiveBloodTypes = bloodTypes.filter(bloodType => bloodType.includes('+'));
+    const negativeBloodTypes = bloodTypes.filter(bloodType => bloodType.includes('-'));
+    const positiveTraces = positiveBloodTypes.map(bloodType => ({
+      x: data.filter(d => d.bloodType === bloodType).map(d => d.date),
+      y: data.filter(d => d.bloodType === bloodType).map(d => d.fillLevel),
+      mode: 'lines',
+      name: bloodType
+    }));
+    const negativeTraces = negativeBloodTypes.map(bloodType => ({
+      x: data.filter(d => d.bloodType === bloodType).map(d => d.date),
+      y: data.filter(d => d.bloodType === bloodType).map(d => d.fillLevel),
+      mode: 'lines',
+      name: bloodType
+    }));
+    const layout = {
+      title: 'Daily Singapore Blood Stocks since June 2021 (Data not collected from Mid-August to Mid-Oct 2023)',
+      xaxis: {
+        title: 'Date',
+        tickformat: '%b %Y',
+        type: 'date',
+        rangemode: 'tozero'
+      },
+      yaxis: {
+        title: 'Fill Level (%)'
+      },
+      subplot_titles: ['Positive Blood Stocks', 'Negative Blood Stocks']
+    };
+    Plotly.newPlot('blood-stocks-graph', [...positiveTraces, ...negativeTraces], { ...layout, showlegend: true });
+  }
+  plotSubplots();
+</script>
+
+
+<!-- Plot a weekly-averaged graph of the data. Do not use reduce functions. Sort by the date. Only display the month and year on x axis -->
+<div id="blood-stocks-weekly-graph"></div>
+<script>
+  async function plotWeeklyGraph() {
+    const response = await fetch('/assets/blood.json');
+    const data = await response.json();
+    const bloodTypes = [...new Set(data.map(d => d.bloodType))];
+    const traces = bloodTypes.map(bloodType => {
+      const bloodTypeData = data.filter(d => d.bloodType === bloodType);
+      const weeklyAverages = [];
+      let weeklyTotal = 0;
+      let weeklyCount = 0;
+      for (let i = 0; i < bloodTypeData.length; i++) {
+        weeklyTotal += bloodTypeData[i].fillLevel;
+        weeklyCount++;
+        if (i % 7 === 6 || i === bloodTypeData.length - 1) {
+          weeklyAverages.push(weeklyTotal / weeklyCount);
+          weeklyTotal = 0;
+          weeklyCount = 0;
+        }
+      }
+      return {
+        x: weeklyAverages.map((_, i) => bloodTypeData[i * 7].date),
+        y: weeklyAverages,
+        mode: 'lines',
+        name: bloodType
+      };
+    });
+    const layout = {
+      title: 'Weekly Averaged Singapore Blood Stocks since June 2021 (Data not collected from Mid-August to Mid-Oct 2023)',
+      xaxis: {
+        title: 'Date',
+        tickformat: '%b %Y',
+        type: 'date',
+        rangemode: 'tozero'
+      },
+      yaxis: {
+        title: 'Fill Level (%)'
+      }
+    };
+    Plotly.newPlot('blood-stocks-weekly-graph', traces, layout);
+  }
+  plotWeeklyGraph();
+</script>
+
+<!-- Plot now a monthly averaged version -->
+<div id="blood-stocks-monthly-graph"></div>
+<script>
+  async function plotMonthlyGraph() {
+    const response = await fetch('/assets/blood.json');
+    const data = await response.json();
+    const bloodTypes = [...new Set(data.map(d => d.bloodType))];
+    const traces = bloodTypes.map(bloodType => {
+      const bloodTypeData = data.filter(d => d.bloodType === bloodType);
+      const monthlyAverages = [];
+      let monthlyTotal = 0;
+      let monthlyCount = 0;
+      for (let i = 0; i < bloodTypeData.length; i++) {
+        monthlyTotal += bloodTypeData[i].fillLevel;
+        monthlyCount++;
+        if (i % 30 === 29 || i === bloodTypeData.length - 1) {
+          monthlyAverages.push(monthlyTotal / monthlyCount);
+          monthlyTotal = 0;
+          monthlyCount = 0;
+        }
+      }
+      return {
+        x: monthlyAverages.map((_, i) => bloodTypeData[i * 30].date),
+        y: monthlyAverages,
+        mode: 'lines',
+        name: bloodType
+      };
+    });
+    const layout = {
+      title: 'Monthly Averaged Singapore Blood Stocks since June 2021 (Data not collected from Mid-August to Mid-Oct 2023)',
+      xaxis: {
+        title: 'Date',
+        tickformat: '%b %Y',
+        type: 'date',
+        rangemode: 'tozero'
+      },
+      yaxis: {
+        title: 'Fill Level (%)'
+      }
+    };
+    Plotly.newPlot('blood-stocks-monthly-graph', traces, layout);
+  }
+  plotMonthlyGraph();
+</script>
+
+
+
 {: refdef}
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
@@ -36,6 +201,7 @@ If you're on mobile, you can press and hold on this image and open it in a new t
 **Table of Contents**
 
 - [TLDR](#tldr)
+  - [Interactive Graphs](#interactive-graphs)
 - [Disclaimers](#disclaimers)
 - [Why did I do this?](#why-did-i-do-this)
 - [Where do I get exact blood stock levels?](#where-do-i-get-exact-blood-stock-levels)
