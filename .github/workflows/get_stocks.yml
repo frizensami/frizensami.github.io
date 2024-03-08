@@ -22,6 +22,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+      - name: Install dependencies
+        run: npm install
       - name: Run script
         run: node scripts/bloodstocks.js
       - name: Upload artifact
@@ -29,3 +31,4 @@ jobs:
         with:
           name: blood
           path: assets/blood-test.json
+          
