@@ -15,14 +15,12 @@ category: blog
 author: sriram
 ---
 
-<span style="color:red"> **Latest update: Oct 11 2023** </span>
-<br/>
-<span style="color:red"> The Red Cross website was redesigned so the technique I use has changed. Howver, this post is not yet updated with that information. </span>
+<span style="color:red"> The Red Cross website was redesigned so the technique I use has changed. However, this post is not yet updated with that information. </span>
 
 ## TLDR
 
 1. I wrote a Telegram bot to track Singapore's blood stock levels ([@sgbloodstocksbot](https://t.me/sgbloodstocksbot){:target="\_blank" rel="noopener"}). Users can subscribe to the bot to be notified about changes in their blood type's stock levels (or any changes at all).
-1. The stock data from 14th June 2021 onwards (constantly updated with new data) is available [in this repository](https://github.com/datascapesg/red-cross-blood-stocks){:target="\_blank" rel="noopener"} in the ["Flat Data" format](https://next.github.com/projects/flat-data){:target="\_blank" rel="noopener"}.
+1. The stock data from 14th June 2021 onwards (constantly updated with new data) is available [in this repository](https://github.com/frizensami/red-cross-blood-stocks){:target="\_blank" rel="noopener"} in the ["Flat Data" format](https://next.github.com/projects/flat-data){:target="\_blank" rel="noopener"}.
 
 {:refdef: style="text-align: center;"}
 
@@ -36,36 +34,49 @@ author: sriram
 
 ### Interactive Graphs
 
+<!-- Add a note in red that this section is best viewed on a desktop. -->
+
+<p style="color:red"><em>These graphs are best viewed on a desktop.</em></p>
+
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<div id="blood-stocks-graph"></div>
+<details>
+  <summary style="background-color: lightgrey; padding: 10px; margin-bottom: 10px;">
+    <span style="display: inline-block; margin-right: 5px;" id="accordion-arrow">▶</span>
+    Daily Blood Stock Data (Click to expand)
+  </summary>
+  <div id="blood-stocks-graph"></div>
+</details>
+
+<details open>
+  <summary style="background-color: lightgrey; padding: 10px; margin-bottom: 10px;">
+    <span style="display: inline-block; margin-right: 5px;" id="accordion-arrow">▶</span>
+    Weekly Blood Stock Data (Click to expand)
+  </summary>
+  <div id="blood-stocks-weekly-graph"></div>
+</details>
+
+<details>
+  <summary style="background-color: lightgrey; padding: 10px; margin-bottom: 10px;">
+    <span style="display: inline-block; margin-right: 5px;" id="accordion-arrow">▶</span>
+    Monthly Blood Stock Data (Click to expand)
+  </summary>
+  <div id="blood-stocks-monthly-graph"></div>
+</details>
+
 <script>
-  async function plotGraph(id, filterFn, title) {
-    const response = await fetch('/assets/blood.json');
-    const data = await response.json();
-    const filteredData = data.filter(filterFn);
-    const bloodTypes = [...new Set(filteredData.map(d => d.bloodType))];
-    const traces = bloodTypes.map(bloodType => ({
-      x: filteredData.filter(d => d.bloodType === bloodType).map(d => d.date),
-      y: filteredData.filter(d => d.bloodType === bloodType).map(d => d.fillLevel),
-      mode: 'lines',
-      name: bloodType
-    }));
-    const layout = {
-      title: title,
-      xaxis: {
-        title: 'Date',
-        tickformat: '%b %Y',
-        type: 'date',
-        rangemode: 'tozero'
-      },
-      yaxis: {
-        title: 'Fill Level (%)'
-      }
-    };
-    Plotly.newPlot(id, traces, layout);
-  }
-  async function plotSubplots() {
+  const accordions = document.querySelectorAll('details');
+  accordions.forEach(accordion => {
+    accordion.addEventListener('toggle', () => {
+      const arrow = accordion.querySelector('#accordion-arrow');
+      arrow.textContent = accordion.open ? '▼' : '▶';
+    });
+  });
+</script>
+
+
+<script>
+  async function plotDailyGraph() {
     const response = await fetch('/assets/blood.json');
     const data = await response.json();
     const bloodTypes = [...new Set(data.map(d => d.bloodType))];
@@ -98,12 +109,11 @@ author: sriram
     };
     Plotly.newPlot('blood-stocks-graph', [...positiveTraces, ...negativeTraces], { ...layout, showlegend: true });
   }
-  plotSubplots();
+  plotDailyGraph();
 </script>
 
 
 <!-- Plot a weekly-averaged graph of the data. Do not use reduce functions. Sort by the date. Only display the month and year on x axis -->
-<div id="blood-stocks-weekly-graph"></div>
 <script>
   async function plotWeeklyGraph() {
     const response = await fetch('/assets/blood.json');
@@ -148,7 +158,6 @@ author: sriram
 </script>
 
 <!-- Plot now a monthly averaged version -->
-<div id="blood-stocks-monthly-graph"></div>
 <script>
   async function plotMonthlyGraph() {
     const response = await fetch('/assets/blood.json');
@@ -229,7 +238,7 @@ The (happy) problem was, every time I checked for a while, my stock level was fu
 
 I decided to make a Telegram bot [(try @sgbloodstocksbot here!)](https://t.me/sgbloodstocksbot){:target="\_blank" rel="noopener"} that scrapes data from the Red Cross website and pings me when my blood type's stocks change.
 
-I then heard about [Datascape Singapore](https://github.com/datascapesg/){:target="\_blank" rel="noopener"}, a project to save Singapore-related data into ["Flat Data" files on GitHub](https://next.github.com/projects/flat-data){:target="\_blank" rel="noopener"}. I used the same code from the Telegram bot to scrape and **save the blood stock data daily**, from 14th June 2021 onward, into [this repository](https://github.com/datascapesg/red-cross-blood-stocks){:target="\_blank" rel="noopener"} (see `blood-stocks.json` for the latest scraped data).
+I then heard about [Datascape Singapore](https://github.com/datascapesg/){:target="\_blank" rel="noopener"}, a project to save Singapore-related data into ["Flat Data" files on GitHub](https://next.github.com/projects/flat-data){:target="\_blank" rel="noopener"}. I used the same code from the Telegram bot to scrape and **save the blood stock data daily**, from 14th June 2021 onward, into [this repository](https://github.com/frizensami/red-cross-blood-stocks){:target="\_blank" rel="noopener"} (see `blood-stocks.json` for the latest scraped data).
 
 ## Where do I get exact blood stock levels?
 
@@ -281,14 +290,16 @@ I get asked sometimes if the blood stock levels are sensitive information and wh
 
 ### Downloading and plotting
 
-The blood stock data is stored in [this repository](https://github.com/datascapesg/red-cross-blood-stocks){:target="\_blank" rel="noopener"}, but each update is a separate [git commit](https://www.atlassian.com/git/tutorials/saving-changes/git-commit){:target="\_blank" rel="noopener"}. We first have to download all versions of `blood-stocks.json` across all commits. The code to download and analyze the most up-to-date data is [here](https://github.com/frizensami/bloodstock_analysis){:target="\_blank" rel="noopener"}, feel free to give it a go!
+The blood stock data is stored in [this repository](https://github.com/frizensami/red-cross-blood-stocks){:target="\_blank" rel="noopener"}, but each update is a separate [git commit](https://www.atlassian.com/git/tutorials/saving-changes/git-commit){:target="\_blank" rel="noopener"}. We first have to download all versions of `blood-stocks.json` across all commits. The code to download and analyze the most up-to-date data is [here](https://github.com/frizensami/bloodstock_analysis){:target="\_blank" rel="noopener"}, feel free to give it a go!
 
 {:refdef: style="text-align: center;"}
-![Graph of Singapore Blood Stocks](/assets/images/bloodstocks/bloodstocks.png){:height="auto"}
+![Sample Graph of Singapore Blood Stocks](/assets/images/bloodstocks/bloodstocks.png){:height="auto"}
 If you're on mobile, you can press and hold on this image and open it in a new tab.
 {: refdef}
 
 ### Graph format and data frequency
+
+This is a subset of the full data, just as an example of the data format and some insights.
 
 -   The **x-axis** represents **time**.
 
@@ -320,6 +331,6 @@ This data is all a side effect of [@sgbloodstocksbot](https://t.me/sgbloodstocks
 ## Resources
 
 -   [Singapore Blood Stocks Bot on Telegram](https://t.me/sgbloodstocksbot), code is [here](https://github.com/frizensami/sg-blood-stocks-bot)
--   [Scraper for blood stocks on Datascape SG](https://github.com/datascapesg/scrapers/blob/develop/netlify/functions/redcross-bloodstocks.js)
--   [All blood stock data (Github Flat Data format)](https://github.com/datascapesg/red-cross-blood-stocks)
+-   [Scraper for blood stocks](https://github.com/frizensami/scrapers/blob/develop/netlify/functions/redcross-bloodstocks.js)
+-   [All blood stock data (Github Flat Data format)](https://github.com/frizensami/red-cross-blood-stocks)
 -   [Bloodstock analysis scripts used for this post](https://github.com/frizensami/bloodstock_analysis)
