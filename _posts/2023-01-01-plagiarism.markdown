@@ -33,7 +33,7 @@ The Rust crates can be found here:
 [![Crates.io Version](https://img.shields.io/crates/v/plagiarismbasic_lib?label=PlagiarismBasic%20Library
 )](https://crates.io/crates/plagiarismbasic_lib)
 
-and the [GitHub repository here](https://github.com/frizensami/plagiarism-basic):
+and the [GitHub repository here](https://github.com/frizensami/plagiarism-basic).
 
 
 
