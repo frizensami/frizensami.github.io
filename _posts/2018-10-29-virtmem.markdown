@@ -16,7 +16,7 @@ description: A review of the "Efficient Virtual Memory for Big Memory Servers" p
 ---
 
 # Paper Review: Efficient Virtual Memory for Big Memory Servers
-[What is Paper Review?](/about-paperreview)
+<!-- [What is Paper Review?](/about-paperreview) -->
 
 ## Citation
 Basu, A., Gandhi, J., Chang, J., Hill, M. D., & Swift, M. M. (2013, June). Efficient virtual memory for big memory servers. In ACM SIGARCH Computer Architecture News (Vol. 41, No. 3, pp. 237-248). ACM.

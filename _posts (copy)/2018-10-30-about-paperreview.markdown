@@ -6,7 +6,7 @@ image: /assets/images/markdown.jpg
 headerImage: false
 tag:
 - paper-review
-star: true
+star: false
 category: blog
 author: sriram
 description: What Paper Review is About

@@ -16,7 +16,7 @@ description: A review of the "Load Slice Core Microarchitecture" paper by Carlso
 ---
 
 # Paper Review: Load-Slice Core Microarchitecture
-[What is Paper Review?](/about-paperreview)
+<!-- [What is Paper Review?](/about-paperreview) -->
 
 ## Citation
 Carlson, T. E., Heirman, W., Allam, O., Kaxiras, S., & Eeckhout, L. (2015, June). The load slice core microarchitecture. In Computer Architecture (ISCA), 2015 ACM/IEEE 42nd Annual International Symposium on (pp. 272-284). IEEE.
