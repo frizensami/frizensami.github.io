@@ -448,8 +448,17 @@
               },
               plugins: {
                 legend: {
-                  display: true,
-                  position: 'bottom',
+                  onClick: function (e, legendItem, legend) {
+                    const index = legendItem.datasetIndex;
+                    const chart = legend.chart;
+                    const meta = chart.getDatasetMeta(index);
+                    // Toggle the hidden flag for the dataset
+                    meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
+                    chart.update();
+                  },
+                  onHover: function (e, legendItem, legend) {
+                    e.native.target.style.cursor = 'pointer';
+                  },
                   labels: {
                     font: {
                       size: 10
@@ -465,6 +474,8 @@
                   pan: { enabled: true, mode: 'x' }
                 }
               }
+
+
             }
           });
         } else {
