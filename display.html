@@ -86,7 +86,6 @@
       margin: 40px auto;
       width: 100%;
       max-width: 90vw;
-      /* Nearly full width on mobile */
       background: #fff;
       padding: 20px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -96,7 +95,24 @@
     @media (min-width: 768px) {
       .chart-container {
         max-width: 70vw;
-        /* Smaller percentage on wider screens */
+      }
+    }
+
+    /* Force the canvas to have a fixed height to prevent it from growing indefinitely */
+    .chart-container canvas {
+      display: block;
+      width: 100% !important;
+    }
+
+    @media (max-width: 767px) {
+      .chart-container canvas {
+        height: 300px !important;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .chart-container canvas {
+        height: 400px !important;
       }
     }
   </style>
@@ -126,20 +142,16 @@
   </div>
 
   <script>
-    // Debounce function to limit the rate at which a function is called.
+    // Debounce function to prevent search UI blocking.
     function debounce(func, wait) {
       let timeout;
       return function (...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func.apply(this, args);
-        };
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(() => func.apply(this, args), wait);
       };
     }
 
-    // URL for aggregated JSON (use the raw URL from your GitHub repo)
+    // URL for aggregated JSON (use the raw URL from your repo)
     const aggregatedUrl = 'https://raw.githubusercontent.com/frizensami/activesg-capacities/main/aggregated_capacities.json';
     let aggregatedData;
     let filteredGyms = []; // gyms matching the search
@@ -174,8 +186,9 @@
 
     function updateDashboard() {
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-      // Sort gym names alphabetically and filter by search query.
-      filteredGyms = Object.keys(aggregatedData).sort((a, b) => a.localeCompare(b))
+      // Sort gym names alphabetically and filter.
+      filteredGyms = Object.keys(aggregatedData)
+        .sort((a, b) => a.localeCompare(b))
         .filter(gym => gym.toLowerCase().includes(searchQuery));
       currentPage = 1; // Reset pagination on new search.
       renderCurrentCapacities();
@@ -202,7 +215,7 @@
 
       gymsToShow.forEach(gym => {
         const gymData = aggregatedData[gym];
-        // Sort dates and get the most recent day.
+        // Get the most recent day.
         const dates = Object.keys(gymData).sort();
         const latestDate = dates[dates.length - 1];
         const dayData = gymData[latestDate];
@@ -217,15 +230,16 @@
 
         const tr = document.createElement('tr');
 
-        // Gym name cell.
+        // Gym name.
         const tdGym = document.createElement('td');
         tdGym.textContent = gym;
         tr.appendChild(tdGym);
 
-        // Latest Capacity cell with color highlighting.
+        // Latest Capacity with color highlighting.
         const tdCapacity = document.createElement('td');
         tdCapacity.textContent = latestEntry.capacity !== null ? latestEntry.capacity : 'N/A';
         if (latestEntry.capacity !== null && !isNaN(latestEntry.capacity)) {
+          // Map capacity (0 to 100) to red intensity.
           let alpha = Math.min(Math.max(latestEntry.capacity / 100, 0), 1);
           tdCapacity.style.backgroundColor = `rgba(255, 0, 0, ${alpha})`;
         }
@@ -327,9 +341,12 @@
             dataArray[slotIndex] = entry.capacity;
           });
 
+          // Format date in a more readable form: e.g., "1 Mar 2025"
           const dtDate = new Date(date + "T00:00:00+08:00");
+          const options = { day: 'numeric', month: 'short', year: 'numeric' };
+          const readableDate = dtDate.toLocaleDateString('en-GB', options);
           const dayOfWeek = weekdays[dtDate.getDay()];
-          const label = `${date} (${dayOfWeek})`;
+          const label = `${readableDate} (${dayOfWeek})`;
 
           datasets.push({
             label: label,
@@ -349,7 +366,7 @@
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 x: {
                   title: {
@@ -381,18 +398,11 @@
                 },
                 zoom: {
                   zoom: {
-                    wheel: {
-                      enabled: true
-                    },
-                    pinch: {
-                      enabled: true
-                    },
+                    wheel: { enabled: true },
+                    pinch: { enabled: true },
                     mode: 'x'
                   },
-                  pan: {
-                    enabled: true,
-                    mode: 'x'
-                  }
+                  pan: { enabled: true, mode: 'x' }
                 }
               }
             }
