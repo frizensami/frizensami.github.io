@@ -128,7 +128,7 @@
 
     <!-- Search filter -->
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search gyms..." />
+      <input type="text" id="searchInput" placeholder="Search gyms and pools..." />
     </div>
 
     <!-- Current capacities display -->
@@ -142,7 +142,7 @@
   </div>
 
   <script>
-    // Debounce function to prevent search UI blocking.
+    // Debounce function to prevent UI blocking during search.
     function debounce(func, wait) {
       let timeout;
       return function (...args) {
@@ -201,7 +201,7 @@
 
       const table = document.createElement('table');
       const headerRow = document.createElement('tr');
-      ['Gym', 'Latest Capacity', 'Status', 'Last Update (UTC+8)'].forEach(text => {
+      ['Gym/Pool', 'Latest Capacity', 'Status', 'Last Update (UTC+8)'].forEach(text => {
         const th = document.createElement('th');
         th.textContent = text;
         headerRow.appendChild(th);
@@ -353,7 +353,10 @@
             data: dataArray,
             fill: false,
             borderWidth: 2,
-            spanGaps: true
+            spanGaps: true,
+            // Increase point hit radius for better interactivity.
+            pointHitRadius: 10,
+            pointHoverRadius: 6
           });
         });
 
@@ -367,6 +370,17 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
+              interaction: {
+                mode: 'index',
+                intersect: false
+              },
+              elements: {
+                point: {
+                  radius: 3,
+                  hitRadius: 10,
+                  hoverRadius: 6
+                }
+              },
               scales: {
                 x: {
                   title: {
