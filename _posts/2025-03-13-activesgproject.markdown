@@ -10,5 +10,5 @@ headerImage: false
 description: "Monitor real-time and historical capacities of ActiveSG gyms and pools with an interactive dashboard."
 category: project
 author: sriram
-externalLink: https://sriramsami.com/activesg/
+externalLink: /activesg/
 ---
