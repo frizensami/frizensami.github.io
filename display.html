@@ -5,16 +5,12 @@
   <meta charset="UTF-8">
   <title>ActiveSG Capacities Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Open Graph / Facebook / Telegram -->
-  <meta property="og:title" content="ActiveSG Capacities Dashboard" />
-  <meta property="og:description"
-    content="Monitor real-time and historical capacities of ActiveSG gyms and pools with an interactive dashboard." />
-  <!-- <meta property="og:image" content="https://yourdomain.com/path/to/preview-image.png" /> -->
-  <meta property="og:url" content="https://sriramsami.com/activesg/" />
-  <meta property="og:type" content="website" />
+
+  <!-- ... your meta tags / Open Graph tags ... -->
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+
   <style>
     :root {
       --primary-color: #007BFF;
@@ -158,8 +154,73 @@
         height: 400px !important;
       }
     }
+
+    /* Tabs styling */
+    .tabs {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 4px 4px 0 0;
+      cursor: pointer;
+      background-color: var(--light-gray);
+      margin-right: 5px;
+      transition: background-color 0.3s;
+      font-weight: 500;
+    }
+
+    .tabs button:hover {
+      background-color: #eaeaea;
+    }
+
+    .tabs button.active {
+      background-color: #fff;
+      border-bottom: 2px solid #fff;
+      font-weight: 700;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Heatmap table styling */
+    .heatmap-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      /* enable horizontal scroll on mobile */
+      margin-top: 10px;
+    }
+
+    .heatmap-table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      /* Optional: set a min-width so half-hour heatmaps don't squish too much on narrow screens */
+      min-width: 600px;
+    }
+
+    .heatmap-table th,
+    .heatmap-table td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 6px;
+      white-space: nowrap;
+      /* Keep times from wrapping */
+    }
+
+    .heatmap-table th {
+      background: #f2f2f2;
+    }
   </style>
-  <!-- Chart.js CDN -->
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Chart.js Zoom Plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1"></script>
@@ -181,13 +242,13 @@
     <div id="currentCapacities">Loading current capacities...</div>
     <div class="pagination" id="tablePagination"></div>
 
-    <!-- Historical graphs -->
+    <!-- Historical Data Section -->
     <h2>Historical Data (Day-by-Day, 10-min Blocks)</h2>
     <div id="historicalGraphs">Loading historical graphs...</div>
   </div>
 
   <script>
-    // Debounce function to prevent UI blocking during search.
+    // Debounce function to prevent UI blocking
     function debounce(func, wait) {
       let timeout;
       return function (...args) {
@@ -196,16 +257,16 @@
       };
     }
 
-    // URL for aggregated JSON (use the raw URL from your repo)
+    // Aggregated data URL
     const aggregatedUrl = 'https://raw.githubusercontent.com/frizensami/activesg-capacities/main/aggregated_capacities.json';
     let aggregatedData;
-    let filteredGyms = []; // gyms matching the search
+    let filteredGyms = [];
 
-    // Pagination variables.
+    // Pagination
     const rowsPerPage = 5;
     let currentPage = 1;
 
-    // Fixed x-axis labels: one per 10-minute block from 00:00 to 23:50.
+    // For line charts
     const globalLabels = [];
     for (let h = 0; h < 24; h++) {
       for (let m = 0; m < 60; m += 10) {
@@ -215,7 +276,7 @@
       }
     }
 
-    // Load aggregated data.
+    // Load data
     fetch(aggregatedUrl)
       .then(response => response.json())
       .then(data => {
@@ -226,20 +287,20 @@
         document.querySelector('.container').innerHTML = 'Error loading data: ' + error;
       });
 
-    // Attach search event listener with debounce.
+    // Debounced search
     document.getElementById('searchInput').addEventListener('input', debounce(updateDashboard, 300));
 
     function updateDashboard() {
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-      // Sort gym names alphabetically and filter.
       filteredGyms = Object.keys(aggregatedData)
         .sort((a, b) => a.localeCompare(b))
         .filter(gym => gym.toLowerCase().includes(searchQuery));
-      currentPage = 1; // Reset pagination on new search.
+      currentPage = 1;
       renderCurrentCapacities();
-      renderHistoricalGraphs();
+      renderHistoricalViews();
     }
 
+    // Current capacities
     function renderCurrentCapacities() {
       const container = document.getElementById('currentCapacities');
       container.innerHTML = '';
@@ -253,14 +314,12 @@
       });
       table.appendChild(headerRow);
 
-      // Paginate: show only rows for current page.
       const start = (currentPage - 1) * rowsPerPage;
       const end = currentPage * rowsPerPage;
       const gymsToShow = filteredGyms.slice(start, end);
 
       gymsToShow.forEach(gym => {
         const gymData = aggregatedData[gym];
-        // Get the most recent day.
         const dates = Object.keys(gymData).sort();
         const latestDate = dates[dates.length - 1];
         const dayData = gymData[latestDate];
@@ -275,22 +334,21 @@
 
         const tr = document.createElement('tr');
 
-        // Gym name.
+        // Gym name
         const tdGym = document.createElement('td');
         tdGym.textContent = gym;
         tr.appendChild(tdGym);
 
-        // Latest Capacity with color highlighting.
+        // Capacity color
         const tdCapacity = document.createElement('td');
         tdCapacity.textContent = latestEntry.capacity !== null ? latestEntry.capacity : 'N/A';
         if (latestEntry.capacity !== null && !isNaN(latestEntry.capacity)) {
-          // Map capacity (0 to 100) to red intensity.
           let alpha = Math.min(Math.max(latestEntry.capacity / 100, 0), 1);
           tdCapacity.style.backgroundColor = `rgba(255, 0, 0, ${alpha})`;
         }
         tr.appendChild(tdCapacity);
 
-        // Status cell (red text if closed).
+        // Status
         const tdStatus = document.createElement('td');
         tdStatus.textContent = (latestEntry.isClosed && latestEntry.isClosed === "true") ? "Closed" : "Open";
         if (latestEntry.isClosed && latestEntry.isClosed === "true") {
@@ -299,7 +357,7 @@
         }
         tr.appendChild(tdStatus);
 
-        // Last Update cell.
+        // Last update
         const tdTime = document.createElement('td');
         if (latestEntry.timestamp) {
           const dt = new Date(latestEntry.timestamp);
@@ -350,140 +408,386 @@
       paginationDiv.appendChild(nextBtn);
     }
 
-    function renderHistoricalGraphs() {
+    // Render historical data
+    function renderHistoricalViews() {
       const container = document.getElementById('historicalGraphs');
       container.innerHTML = '';
 
       filteredGyms.forEach(gym => {
         const gymData = aggregatedData[gym];
 
-        // Create a container for the chart.
-        const chartDiv = document.createElement('div');
-        chartDiv.className = 'chart-container';
+        // Card
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'chart-container';
+
+        // Title
         const gymHeader = document.createElement('h3');
         gymHeader.textContent = gym;
-        chartDiv.appendChild(gymHeader);
+        cardDiv.appendChild(gymHeader);
 
+        // TABS
+        const tabsDiv = document.createElement('div');
+        tabsDiv.className = 'tabs';
+
+        const tabLineBtn = document.createElement('button');
+        tabLineBtn.textContent = 'Line Chart';
+        tabLineBtn.classList.add('active');
+
+        const tabHeatmapHourBtn = document.createElement('button');
+        tabHeatmapHourBtn.textContent = 'Hourly Heatmap';
+
+        const tabHeatmapHalfBtn = document.createElement('button');
+        tabHeatmapHalfBtn.textContent = 'Half-Hour Heatmap';
+
+        tabsDiv.appendChild(tabLineBtn);
+        tabsDiv.appendChild(tabHeatmapHourBtn);
+        tabsDiv.appendChild(tabHeatmapHalfBtn);
+        cardDiv.appendChild(tabsDiv);
+
+        // TAB CONTENT: line chart
+        const lineChartDiv = document.createElement('div');
+        lineChartDiv.className = 'tab-content active';
         const canvas = document.createElement('canvas');
         canvas.id = 'chart_' + gym.replace(/\s+/g, '_');
-        chartDiv.appendChild(canvas);
-        container.appendChild(chartDiv);
+        lineChartDiv.appendChild(canvas);
 
-        const datasets = [];
-        const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        // TAB CONTENT: hourly heatmap
+        const heatmapHourlyDiv = document.createElement('div');
+        heatmapHourlyDiv.className = 'tab-content';
 
-        Object.keys(gymData).forEach(date => {
-          const dayData = gymData[date];
-          if (!Array.isArray(dayData)) return; // Skip summarized data.
+        // TAB CONTENT: half-hour heatmap
+        const heatmapHalfDiv = document.createElement('div');
+        heatmapHalfDiv.className = 'tab-content';
 
-          const dataArray = new Array(globalLabels.length).fill(null);
-          const sortedEntries = dayData.slice().sort((a, b) => a.timestamp - b.timestamp);
-          sortedEntries.forEach(entry => {
-            const dt = new Date(entry.timestamp);
-            const localHour = (dt.getUTCHours() + 8) % 24;
-            const localMinutes = dt.getUTCMinutes();
-            const slotIndex = localHour * 6 + Math.floor(localMinutes / 10);
-            dataArray[slotIndex] = entry.capacity;
-          });
+        // Add to card
+        cardDiv.appendChild(lineChartDiv);
+        cardDiv.appendChild(heatmapHourlyDiv);
+        cardDiv.appendChild(heatmapHalfDiv);
 
-          // Format date in a more readable form: e.g., "1 Mar 2025"
-          const dtDate = new Date(date + "T00:00:00+08:00");
-          const options = { day: 'numeric', month: 'short', year: 'numeric' };
-          const readableDate = dtDate.toLocaleDateString('en-GB', options);
-          const dayOfWeek = weekdays[dtDate.getDay()];
-          const label = `${readableDate} (${dayOfWeek})`;
+        // Add card to container
+        container.appendChild(cardDiv);
 
-          datasets.push({
-            label: label,
-            data: dataArray,
-            fill: false,
-            borderWidth: 2,
-            spanGaps: true,
-            pointHitRadius: 10,
-            pointHoverRadius: 6,
-            // Optionally add a slight tension for smoother curves:
-            tension: 0.2
-          });
+        // Build line chart
+        renderLineChart(gymData, canvas);
+
+        // Build hourly heatmap
+        renderHeatmap(gymData, heatmapHourlyDiv, false);
+
+        // Build half-hour heatmap
+        renderHeatmap(gymData, heatmapHalfDiv, true);
+
+        // Tab handlers
+        tabLineBtn.addEventListener('click', () => {
+          tabLineBtn.classList.add('active');
+          tabHeatmapHourBtn.classList.remove('active');
+          tabHeatmapHalfBtn.classList.remove('active');
+
+          lineChartDiv.classList.add('active');
+          heatmapHourlyDiv.classList.remove('active');
+          heatmapHalfDiv.classList.remove('active');
         });
 
-        if (datasets.length > 0) {
-          new Chart(canvas.getContext('2d'), {
-            type: 'line',
-            data: {
-              labels: globalLabels,
-              datasets: datasets
+        tabHeatmapHourBtn.addEventListener('click', () => {
+          tabHeatmapHourBtn.classList.add('active');
+          tabLineBtn.classList.remove('active');
+          tabHeatmapHalfBtn.classList.remove('active');
+
+          heatmapHourlyDiv.classList.add('active');
+          lineChartDiv.classList.remove('active');
+          heatmapHalfDiv.classList.remove('active');
+        });
+
+        tabHeatmapHalfBtn.addEventListener('click', () => {
+          tabHeatmapHalfBtn.classList.add('active');
+          tabLineBtn.classList.remove('active');
+          tabHeatmapHourBtn.classList.remove('active');
+
+          heatmapHalfDiv.classList.add('active');
+          lineChartDiv.classList.remove('active');
+          heatmapHourlyDiv.classList.remove('active');
+        });
+      });
+    }
+
+    function renderLineChart(gymData, canvas) {
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      // Indices 30..137 => 5am..10pm in 10-min increments
+      const LINE_START_INDEX = 5 * 6;       // 30
+      const LINE_END_INDEX = 22 * 6 + 5;  // 137
+
+      // Slice globalLabels to keep only 5am..10pm
+      const partialLabels = globalLabels.slice(LINE_START_INDEX, LINE_END_INDEX + 1);
+
+      const datasets = [];
+
+      Object.keys(gymData).forEach(date => {
+        const dayData = gymData[date];
+        if (!Array.isArray(dayData)) return; // skip summarized data
+
+        // Build a full 144-length array (0..143)
+        const fullDataArray = new Array(144).fill(null);
+
+        // Sort entries by timestamp
+        const sortedEntries = dayData.slice().sort((a, b) => a.timestamp - b.timestamp);
+
+        // Populate fullDataArray
+        sortedEntries.forEach(entry => {
+          const dt = new Date(entry.timestamp);
+          const localHour = (dt.getUTCHours() + 8) % 24;
+          const localMinutes = dt.getUTCMinutes();
+          const slotIndex = localHour * 6 + Math.floor(localMinutes / 10);
+          if (slotIndex >= 0 && slotIndex < 144) {
+            fullDataArray[slotIndex] = entry.capacity;
+          }
+        });
+
+        // Slice out only the times we care about
+        const partialDataArray = fullDataArray.slice(LINE_START_INDEX, LINE_END_INDEX + 1);
+
+        // Format date label
+        const dtDate = new Date(date + "T00:00:00+08:00");
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const readableDate = dtDate.toLocaleDateString('en-GB', options);
+        const dayOfWeek = weekdays[dtDate.getDay()];
+        const label = `${readableDate} (${dayOfWeek})`;
+
+        datasets.push({
+          label,
+          data: partialDataArray,
+          fill: false,
+          borderWidth: 2,
+          spanGaps: true,
+          pointHitRadius: 10,
+          pointHoverRadius: 6,
+          tension: 0.2
+        });
+      });
+
+      if (datasets.length > 0) {
+        new Chart(canvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: partialLabels, // Use partial labels
+            datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false
             },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              interaction: {
-                mode: 'index',
-                intersect: false
-              },
-              elements: {
-                point: {
-                  radius: 3,
-                  hitRadius: 10,
-                  hoverRadius: 6
+            elements: {
+              point: {
+                radius: 3,
+                hitRadius: 10,
+                hoverRadius: 6
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Time of Day (UTC+8)'
+                },
+                ticks: {
+                  maxTicksLimit: 12
                 }
               },
-              scales: {
-                x: {
-                  title: {
-                    display: true,
-                    text: 'Time of Day (UTC+8)'
-                  },
-                  ticks: {
-                    maxTicksLimit: 12
-                  }
-                },
-                y: {
-                  min: 0,
-                  max: 100,
-                  title: {
-                    display: true,
-                    text: 'Capacity'
-                  }
-                }
-              },
-              plugins: {
-                legend: {
-                  onClick: function (e, legendItem, legend) {
-                    const index = legendItem.datasetIndex;
-                    const chart = legend.chart;
-                    const meta = chart.getDatasetMeta(index);
-                    // Toggle the hidden flag for the dataset
-                    meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
-                    chart.update();
-                  },
-                  onHover: function (e, legendItem, legend) {
-                    e.native.target.style.cursor = 'pointer';
-                  },
-                  labels: {
-                    font: {
-                      size: 10
-                    }
-                  }
-                },
-                zoom: {
-                  zoom: {
-                    wheel: { enabled: true },
-                    pinch: { enabled: true },
-                    mode: 'x'
-                  },
-                  pan: { enabled: true, mode: 'x' }
+              y: {
+                min: 0,
+                max: 100,
+                title: {
+                  display: true,
+                  text: 'Capacity'
                 }
               }
-
-
+            },
+            plugins: {
+              legend: {
+                // your onClick / onHover, etc.
+              },
+              zoom: {
+                zoom: {
+                  wheel: { enabled: true },
+                  pinch: { enabled: true },
+                  mode: 'x'
+                },
+                pan: { enabled: true, mode: 'x' }
+              }
             }
-          });
-        } else {
-          const msg = document.createElement('p');
-          msg.textContent = 'No detailed (raw) data available for charting.';
-          chartDiv.appendChild(msg);
+          }
+        });
+      } else {
+        canvas.parentElement.innerHTML = '<p>No detailed (raw) data available for charting.</p>';
+      }
+    }
+
+
+    /**
+     * RENDER HEATMAP
+     * If isHalfHour = false => Show hours 5..22 (i.e., 5am to 10pm).
+     * If isHalfHour = true  => Show half-hour blocks from 5:00 (index=10) to 22:30 (index=45).
+     */
+    function renderHeatmap(gymData, heatmapDiv, isHalfHour) {
+      const dayKeys = Object.keys(gymData).filter(date => Array.isArray(gymData[date]));
+      if (!dayKeys.length) {
+        heatmapDiv.innerHTML = '<p>No detailed (raw) data available for heatmap.</p>';
+        return;
+      }
+
+      // We'll put the table in a scrollable wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'heatmap-wrapper';
+
+      const table = document.createElement('table');
+      table.className = 'heatmap-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+
+      // Left-most cell: day label
+      const thEmpty = document.createElement('th');
+      thEmpty.textContent = 'Date';
+      headerRow.appendChild(thEmpty);
+
+      let startIndex, endIndex;
+      if (!isHalfHour) {
+        // Hourly: show columns for hours 5..22
+        startIndex = 5;
+        endIndex = 22;  // inclusive
+      } else {
+        // Half-hour: show columns for blocks 10..45
+        // block=10 => 5:00 am, block=45 => 22:30 pm
+        startIndex = 10;
+        endIndex = 45;  // inclusive
+      }
+
+      // Build the header row
+      for (let i = startIndex; i <= endIndex; i++) {
+        const th = document.createElement('th');
+        th.textContent = formatHour12Block(i, isHalfHour);
+        headerRow.appendChild(th);
+      }
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      dayKeys.sort().forEach(date => {
+        const dayData = gymData[date];
+        // We'll store sums & counts for the entire day, then only show columns in [startIndex..endIndex]
+        let totalCols = !isHalfHour ? 24 : 48;
+        let sums = new Array(totalCols).fill(0);
+        let counts = new Array(totalCols).fill(0);
+
+        // Process raw data
+        dayData.forEach(entry => {
+          if (typeof entry.capacity !== 'number') return;
+          const dt = new Date(entry.timestamp);
+          const localHour = (dt.getUTCHours() + 8) % 24;
+          const localMin = dt.getUTCMinutes();
+
+          let colIndex;
+          if (!isHalfHour) {
+            // Hourly block
+            colIndex = localHour;  // 0..23
+          } else {
+            // Half-hour block => hour*2 + (0 if min<30 else 1)
+            colIndex = localHour * 2 + (localMin >= 30 ? 1 : 0);
+          }
+
+          // Accumulate
+          if (colIndex >= 0 && colIndex < totalCols) {
+            sums[colIndex] += entry.capacity;
+            counts[colIndex]++;
+          }
+        });
+
+        // Build row
+        const tr = document.createElement('tr');
+        const dtDate = new Date(date + "T00:00:00+08:00");
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const readableDate = dtDate.toLocaleDateString('en-GB', options);
+        const dayOfWeek = weekdays[dtDate.getDay()];
+
+        const dayCell = document.createElement('th');
+        dayCell.textContent = `${readableDate} (${dayOfWeek})`;
+        dayCell.style.textAlign = 'right';
+        tr.appendChild(dayCell);
+
+        // Fill columns in the range
+        for (let i = startIndex; i <= endIndex; i++) {
+          const avg = counts[i] > 0 ? sums[i] / counts[i] : null;
+          const td = document.createElement('td');
+          if (avg !== null) {
+            td.textContent = avg.toFixed(0);
+            let alpha = Math.min(Math.max(avg / 100, 0), 1);
+            td.style.backgroundColor = `rgba(255, 0, 0, ${alpha})`;
+          } else {
+            td.textContent = '-';
+            td.style.backgroundColor = '#fff';
+          }
+          tr.appendChild(td);
         }
+
+        tbody.appendChild(tr);
       });
+
+      table.appendChild(tbody);
+      wrapper.appendChild(table);
+      heatmapDiv.appendChild(wrapper);
+    }
+
+    /**
+     * Format a column index i in 12-hour clock form, skipping times 11pm..5am.
+     * If isHalfHour => i in [0..47], else => i in [0..23].
+     * We'll still label only the columns we show (5..22 or 10..45).
+     */
+    function formatHour12Block(i, isHalfHour) {
+      // e.g., i=5 => 5 am, i=22 => 10 pm
+      // for half-hour => i=10 => 5:00 am, i=45 => 22:30
+      const suffix = (hour24) => (hour24 < 12 ? 'am' : 'pm');
+      const to12 = (hour24) => {
+        let h12 = hour24 % 12;
+        return h12 === 0 ? 12 : h12;
+      };
+
+      if (!isHalfHour) {
+        // Hourly => i is the hour in 24h
+        // i e.g. 5 => 5 am, 22 => 10 pm
+        const hour12 = to12(i);
+        return `${hour12} ${suffix(i)}`;
+      } else {
+        // Half-hour => i in [0..47]
+        // hour = i//2, half= i%2
+        const hour = Math.floor(i / 2);
+        const half = i % 2; // 0 => :00, 1 => :30
+        const hour12 = to12(hour);
+        if (half === 1) {
+          return `${hour12}:30 ${suffix(hour)}`;
+        } else {
+          return `${hour12} ${suffix(hour)}`;
+        }
+      }
+    }
+
+
+    // Format an hour (and optional half-hour) in 12-hour clock form
+    function formatHour12(hour24, half) {
+      // hour24 is 0..23
+      // half => if true => :30
+      const suffix = hour24 < 12 ? 'am' : 'pm';
+      let hour12 = hour24 % 12;
+      if (hour12 === 0) hour12 = 12;
+
+      if (half) {
+        return `${hour12}:30 ${suffix}`;
+      } else {
+        return `${hour12} ${suffix}`;
+      }
     }
   </script>
 </body>
