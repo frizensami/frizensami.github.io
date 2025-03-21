@@ -6,7 +6,16 @@
   <title>ActiveSG Capacities Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- ... your meta tags / Open Graph tags ... -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-37TR9Q8T8Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-37TR9Q8T8Q');
+  </script>
+
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
@@ -33,6 +42,7 @@
       padding: 20px 40px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
 
     header {
@@ -45,6 +55,26 @@
       margin: 0;
       font-size: 2.5em;
       color: var(--primary-color);
+    }
+
+    /* Loading spinner styles */
+    #loadingSpinner {
+      display: none;
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #loadingSpinner p {
+      margin: 0;
+      font-size: 1.2em;
+      color: #333;
     }
 
     .search-box {
@@ -129,6 +159,7 @@
       padding: 20px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
+      position: relative;
     }
 
     @media (min-width: 768px) {
@@ -195,15 +226,14 @@
     .heatmap-wrapper {
       width: 100%;
       overflow-x: auto;
-      /* enable horizontal scroll on mobile */
       margin-top: 10px;
     }
 
     .heatmap-table {
       border-collapse: collapse;
       margin: 0 auto;
-      /* Optional: set a min-width so half-hour heatmaps don't squish too much on narrow screens */
       min-width: 600px;
+      /* so half-hour heatmaps aren't too squished */
     }
 
     .heatmap-table th,
@@ -212,7 +242,6 @@
       text-align: center;
       padding: 6px;
       white-space: nowrap;
-      /* Keep times from wrapping */
     }
 
     .heatmap-table th {
@@ -228,6 +257,11 @@
 
 <body>
   <div class="container">
+    <!-- LOADING SPINNER -->
+    <div id="loadingSpinner">
+      <p id="loadingText">Loading...</p>
+    </div>
+
     <header>
       <h1>ActiveSG Capacities Dashboard</h1>
     </header>
@@ -248,6 +282,18 @@
   </div>
 
   <script>
+    // Show / Hide loading spinner
+    function showLoading(message) {
+      const spinner = document.getElementById('loadingSpinner');
+      const loadingText = document.getElementById('loadingText');
+      loadingText.textContent = message;
+      spinner.style.display = 'block';
+    }
+    function hideLoading() {
+      const spinner = document.getElementById('loadingSpinner');
+      spinner.style.display = 'none';
+    }
+
     // Debounce function to prevent UI blocking
     function debounce(func, wait) {
       let timeout;
@@ -266,7 +312,7 @@
     const rowsPerPage = 5;
     let currentPage = 1;
 
-    // For line charts
+    // For line charts, we have 24 hours * 6 slots/hour = 144
     const globalLabels = [];
     for (let h = 0; h < 24; h++) {
       for (let m = 0; m < 60; m += 10) {
@@ -276,14 +322,22 @@
       }
     }
 
+    // We'll slice the data for 5am..10pm => indices 30..137
+    const LINE_START_INDEX = 5 * 6;       // 30
+    const LINE_END_INDEX = 22 * 6 + 5;    // 137
+    const partialLabels = globalLabels.slice(LINE_START_INDEX, LINE_END_INDEX + 1);
+
     // Load data
+    showLoading("Fetching data...");
     fetch(aggregatedUrl)
       .then(response => response.json())
       .then(data => {
         aggregatedData = data.data;
+        hideLoading();
         updateDashboard();
       })
       .catch(error => {
+        hideLoading();
         document.querySelector('.container').innerHTML = 'Error loading data: ' + error;
       });
 
@@ -291,6 +345,7 @@
     document.getElementById('searchInput').addEventListener('input', debounce(updateDashboard, 300));
 
     function updateDashboard() {
+      showLoading("Filtering gyms...");
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
       filteredGyms = Object.keys(aggregatedData)
         .sort((a, b) => a.localeCompare(b))
@@ -298,6 +353,7 @@
       currentPage = 1;
       renderCurrentCapacities();
       renderHistoricalViews();
+      hideLoading();
     }
 
     // Current capacities
@@ -429,9 +485,13 @@
         const tabsDiv = document.createElement('div');
         tabsDiv.className = 'tabs';
 
-        const tabLineBtn = document.createElement('button');
-        tabLineBtn.textContent = 'Line Chart';
-        tabLineBtn.classList.add('active');
+        // 4 tabs:
+        const tabLast7Btn = document.createElement('button');
+        tabLast7Btn.textContent = 'Last 7 Days';
+        tabLast7Btn.classList.add('active');
+
+        const tabDayOfWeekBtn = document.createElement('button');
+        tabDayOfWeekBtn.textContent = 'Day-of-Week Averages';
 
         const tabHeatmapHourBtn = document.createElement('button');
         tabHeatmapHourBtn.textContent = 'Hourly Heatmap';
@@ -439,17 +499,25 @@
         const tabHeatmapHalfBtn = document.createElement('button');
         tabHeatmapHalfBtn.textContent = 'Half-Hour Heatmap';
 
-        tabsDiv.appendChild(tabLineBtn);
+        tabsDiv.appendChild(tabLast7Btn);
+        tabsDiv.appendChild(tabDayOfWeekBtn);
         tabsDiv.appendChild(tabHeatmapHourBtn);
         tabsDiv.appendChild(tabHeatmapHalfBtn);
         cardDiv.appendChild(tabsDiv);
 
-        // TAB CONTENT: line chart
-        const lineChartDiv = document.createElement('div');
-        lineChartDiv.className = 'tab-content active';
-        const canvas = document.createElement('canvas');
-        canvas.id = 'chart_' + gym.replace(/\s+/g, '_');
-        lineChartDiv.appendChild(canvas);
+        // TAB CONTENT: last 7 days
+        const last7Div = document.createElement('div');
+        last7Div.className = 'tab-content active';
+        const last7Canvas = document.createElement('canvas');
+        last7Canvas.id = 'chart_last7_' + gym.replace(/\s+/g, '_');
+        last7Div.appendChild(last7Canvas);
+
+        // TAB CONTENT: day-of-week averages
+        const dayOfWeekDiv = document.createElement('div');
+        dayOfWeekDiv.className = 'tab-content';
+        const dayOfWeekCanvas = document.createElement('canvas');
+        dayOfWeekCanvas.id = 'chart_dow_' + gym.replace(/\s+/g, '_');
+        dayOfWeekDiv.appendChild(dayOfWeekCanvas);
 
         // TAB CONTENT: hourly heatmap
         const heatmapHourlyDiv = document.createElement('div');
@@ -460,15 +528,19 @@
         heatmapHalfDiv.className = 'tab-content';
 
         // Add to card
-        cardDiv.appendChild(lineChartDiv);
+        cardDiv.appendChild(last7Div);
+        cardDiv.appendChild(dayOfWeekDiv);
         cardDiv.appendChild(heatmapHourlyDiv);
         cardDiv.appendChild(heatmapHalfDiv);
 
         // Add card to container
         container.appendChild(cardDiv);
 
-        // Build line chart
-        renderLineChart(gymData, canvas);
+        // Build last-7-days line chart
+        renderLineChartLast7Days(gymData, last7Canvas);
+
+        // Build day-of-week average line chart
+        renderLineChartDayOfWeekAvg(gymData, dayOfWeekCanvas);
 
         // Build hourly heatmap
         renderHeatmap(gymData, heatmapHourlyDiv, false);
@@ -477,75 +549,93 @@
         renderHeatmap(gymData, heatmapHalfDiv, true);
 
         // Tab handlers
-        tabLineBtn.addEventListener('click', () => {
-          tabLineBtn.classList.add('active');
+        tabLast7Btn.addEventListener('click', () => {
+          tabLast7Btn.classList.add('active');
+          tabDayOfWeekBtn.classList.remove('active');
           tabHeatmapHourBtn.classList.remove('active');
           tabHeatmapHalfBtn.classList.remove('active');
 
-          lineChartDiv.classList.add('active');
+          last7Div.classList.add('active');
+          dayOfWeekDiv.classList.remove('active');
+          heatmapHourlyDiv.classList.remove('active');
+          heatmapHalfDiv.classList.remove('active');
+        });
+
+        tabDayOfWeekBtn.addEventListener('click', () => {
+          tabDayOfWeekBtn.classList.add('active');
+          tabLast7Btn.classList.remove('active');
+          tabHeatmapHourBtn.classList.remove('active');
+          tabHeatmapHalfBtn.classList.remove('active');
+
+          dayOfWeekDiv.classList.add('active');
+          last7Div.classList.remove('active');
           heatmapHourlyDiv.classList.remove('active');
           heatmapHalfDiv.classList.remove('active');
         });
 
         tabHeatmapHourBtn.addEventListener('click', () => {
           tabHeatmapHourBtn.classList.add('active');
-          tabLineBtn.classList.remove('active');
+          tabLast7Btn.classList.remove('active');
+          tabDayOfWeekBtn.classList.remove('active');
           tabHeatmapHalfBtn.classList.remove('active');
 
           heatmapHourlyDiv.classList.add('active');
-          lineChartDiv.classList.remove('active');
+          last7Div.classList.remove('active');
+          dayOfWeekDiv.classList.remove('active');
           heatmapHalfDiv.classList.remove('active');
         });
 
         tabHeatmapHalfBtn.addEventListener('click', () => {
           tabHeatmapHalfBtn.classList.add('active');
-          tabLineBtn.classList.remove('active');
+          tabLast7Btn.classList.remove('active');
+          tabDayOfWeekBtn.classList.remove('active');
           tabHeatmapHourBtn.classList.remove('active');
 
           heatmapHalfDiv.classList.add('active');
-          lineChartDiv.classList.remove('active');
+          last7Div.classList.remove('active');
+          dayOfWeekDiv.classList.remove('active');
           heatmapHourlyDiv.classList.remove('active');
         });
       });
     }
 
-    function renderLineChart(gymData, canvas) {
-      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-      // Indices 30..137 => 5am..10pm in 10-min increments
+    /**
+     * Build a line chart for the last 7 days (5am..10pm).
+     */
+    function renderLineChartLast7Days(gymData, canvas) {
+      // Indices for 5am..10pm
       const LINE_START_INDEX = 5 * 6;       // 30
       const LINE_END_INDEX = 22 * 6 + 5;  // 137
-
-      // Slice globalLabels to keep only 5am..10pm
       const partialLabels = globalLabels.slice(LINE_START_INDEX, LINE_END_INDEX + 1);
 
+      // Find the last 7 raw-data days
+      const allDates = Object.keys(gymData)
+        .filter(d => Array.isArray(gymData[d]))
+        .sort();
+      const last7Dates = allDates.slice(-7); // last 7
+
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       const datasets = [];
 
-      Object.keys(gymData).forEach(date => {
+      last7Dates.forEach(date => {
         const dayData = gymData[date];
-        if (!Array.isArray(dayData)) return; // skip summarized data
-
-        // Build a full 144-length array (0..143)
+        // Build a 144-length array
         const fullDataArray = new Array(144).fill(null);
 
-        // Sort entries by timestamp
         const sortedEntries = dayData.slice().sort((a, b) => a.timestamp - b.timestamp);
-
-        // Populate fullDataArray
         sortedEntries.forEach(entry => {
           const dt = new Date(entry.timestamp);
           const localHour = (dt.getUTCHours() + 8) % 24;
-          const localMinutes = dt.getUTCMinutes();
-          const slotIndex = localHour * 6 + Math.floor(localMinutes / 10);
+          const localMin = dt.getUTCMinutes();
+          const slotIndex = localHour * 6 + Math.floor(localMin / 10);
           if (slotIndex >= 0 && slotIndex < 144) {
             fullDataArray[slotIndex] = entry.capacity;
           }
         });
 
-        // Slice out only the times we care about
         const partialDataArray = fullDataArray.slice(LINE_START_INDEX, LINE_END_INDEX + 1);
 
-        // Format date label
+        // Label
         const dtDate = new Date(date + "T00:00:00+08:00");
         const options = { day: 'numeric', month: 'short', year: 'numeric' };
         const readableDate = dtDate.toLocaleDateString('en-GB', options);
@@ -564,71 +654,178 @@
         });
       });
 
-      if (datasets.length > 0) {
-        new Chart(canvas.getContext('2d'), {
-          type: 'line',
-          data: {
-            labels: partialLabels, // Use partial labels
-            datasets
+      if (!datasets.length) {
+        canvas.parentElement.innerHTML = '<p>No data in the last 7 days.</p>';
+        return;
+      }
+
+      new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: partialLabels,
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          elements: {
+            point: { radius: 3, hitRadius: 10, hoverRadius: 6 }
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-              mode: 'index',
-              intersect: false
+          scales: {
+            x: {
+              title: { display: true, text: 'Time of Day (UTC+8)' },
+              ticks: { maxTicksLimit: 12 }
             },
-            elements: {
-              point: {
-                radius: 3,
-                hitRadius: 10,
-                hoverRadius: 6
-              }
-            },
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: 'Time of Day (UTC+8)'
-                },
-                ticks: {
-                  maxTicksLimit: 12
-                }
+            y: {
+              min: 0, max: 100,
+              title: { display: true, text: 'Capacity' }
+            }
+          },
+          plugins: {
+            legend: {
+              onClick: function (e, legendItem, legend) {
+                const index = legendItem.datasetIndex;
+                const chart = legend.chart;
+                const meta = chart.getDatasetMeta(index);
+                meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
+                chart.update();
               },
-              y: {
-                min: 0,
-                max: 100,
-                title: {
-                  display: true,
-                  text: 'Capacity'
-                }
-              }
-            },
-            plugins: {
-              legend: {
-                // your onClick / onHover, etc.
+              onHover: function (e, legendItem, legend) {
+                e.native.target.style.cursor = 'pointer';
               },
+              labels: { font: { size: 10 } }
+            },
+            zoom: {
               zoom: {
-                zoom: {
-                  wheel: { enabled: true },
-                  pinch: { enabled: true },
-                  mode: 'x'
-                },
-                pan: { enabled: true, mode: 'x' }
+                wheel: { enabled: true },
+                pinch: { enabled: true },
+                mode: 'x'
+              },
+              pan: { enabled: true, mode: 'x' }
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * Build a line chart with 7 data points (Mon..Sun),
+     * averaging all data (5am..10pm) across the entire dataset.
+     */
+    function renderLineChartDayOfWeekAvg(gymData, canvas) {
+      // We'll compute one average capacity per day-of-week (0=Sun..6=Sat).
+      // Then we plot 7 data points on a line chart: [Sun,Mon,Tue,Wed,Thu,Fri,Sat].
+      // We also skip times outside 5am..10pm.
+
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      // We'll store sums & counts for each day-of-week across the entire dataset.
+      let sumsByDOW = [0, 0, 0, 0, 0, 0, 0];
+      let countsByDOW = [0, 0, 0, 0, 0, 0, 0];
+
+      // We'll only consider raw data days
+      const dayKeys = Object.keys(gymData).filter(d => Array.isArray(gymData[d]));
+      if (!dayKeys.length) {
+        canvas.parentElement.innerHTML = '<p>No raw data available for day-of-week averages.</p>';
+        return;
+      }
+
+      dayKeys.forEach(date => {
+        const dayData = gymData[date];
+        const dtDate = new Date(date + "T00:00:00+08:00");
+        const dayOfWeek = dtDate.getDay(); // 0..6
+
+        // Build 144 array
+        const fullDataArray = new Array(144).fill(null);
+        const sortedEntries = dayData.slice().sort((a, b) => a.timestamp - b.timestamp);
+
+        sortedEntries.forEach(entry => {
+          if (typeof entry.capacity !== 'number') return;
+          const dt = new Date(entry.timestamp);
+          const localHour = (dt.getUTCHours() + 8) % 24;
+          const localMin = dt.getUTCMinutes();
+          const slotIndex = localHour * 6 + Math.floor(localMin / 10);
+          if (slotIndex >= 0 && slotIndex < 144) {
+            fullDataArray[slotIndex] = entry.capacity;
+          }
+        });
+
+        // Slice out only 5am..10pm => indices 30..137
+        const partialDataArray = fullDataArray.slice(30, 138);
+        // Average that partial array
+        const numeric = partialDataArray.filter(x => typeof x === 'number');
+        if (numeric.length > 0) {
+          const sum = numeric.reduce((a, b) => a + b, 0);
+          const avg = sum / numeric.length;
+          sumsByDOW[dayOfWeek] += avg;
+          countsByDOW[dayOfWeek]++;
+        }
+      });
+
+      // Build the 7 data points
+      // Each day-of-week => sumsByDOW[i]/countsByDOW[i]
+      const dataPoints = weekdays.map((label, i) => {
+        if (countsByDOW[i] === 0) return null;
+        return sumsByDOW[i] / countsByDOW[i];
+      });
+
+      // If everything is null => no data
+      if (dataPoints.every(x => x === null)) {
+        canvas.parentElement.innerHTML = '<p>No data available for day-of-week averages.</p>';
+        return;
+      }
+
+      // We'll do a line chart with x-axis = day-of-week
+      new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: weekdays, // e.g. ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+          datasets: [{
+            label: 'Avg Capacity by Day-of-Week (5am–10pm)',
+            data: dataPoints,
+            fill: false,
+            borderWidth: 2,
+            spanGaps: true,
+            pointHitRadius: 10,
+            pointHoverRadius: 6,
+            tension: 0.2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: 'Day of Week' }
+            },
+            y: {
+              min: 0, max: 100,
+              title: { display: true, text: 'Avg Capacity' }
+            }
+          },
+          plugins: {
+            legend: {
+              onClick: function (e, legendItem, legend) {
+                // Toggling single dataset
+                const chart = legend.chart;
+                const meta = chart.getDatasetMeta(legendItem.datasetIndex);
+                meta.hidden = meta.hidden === null ? !chart.data.datasets[0].hidden : null;
+                chart.update();
+              },
+              onHover: function (e, legendItem, legend) {
+                e.native.target.style.cursor = 'pointer';
               }
             }
           }
-        });
-      } else {
-        canvas.parentElement.innerHTML = '<p>No detailed (raw) data available for charting.</p>';
-      }
+        }
+      });
     }
-
 
     /**
      * RENDER HEATMAP
-     * If isHalfHour = false => Show hours 5..22 (i.e., 5am to 10pm).
-     * If isHalfHour = true  => Show half-hour blocks from 5:00 (index=10) to 22:30 (index=45).
+     * If isHalfHour=false => Show hours 5..22 (5am..10pm).
+     * If isHalfHour=true => Show half-hour blocks 10..45 => (5:00..22:30).
      */
     function renderHeatmap(gymData, heatmapDiv, isHalfHour) {
       const dayKeys = Object.keys(gymData).filter(date => Array.isArray(gymData[date]));
@@ -647,7 +844,6 @@
       const thead = document.createElement('thead');
       const headerRow = document.createElement('tr');
 
-      // Left-most cell: day label
       const thEmpty = document.createElement('th');
       thEmpty.textContent = 'Date';
       headerRow.appendChild(thEmpty);
@@ -658,8 +854,7 @@
         startIndex = 5;
         endIndex = 22;  // inclusive
       } else {
-        // Half-hour: show columns for blocks 10..45
-        // block=10 => 5:00 am, block=45 => 22:30 pm
+        // Half-hour: show columns for blocks 10..45 => 5:00..22:30
         startIndex = 10;
         endIndex = 45;  // inclusive
       }
@@ -683,7 +878,6 @@
         let sums = new Array(totalCols).fill(0);
         let counts = new Array(totalCols).fill(0);
 
-        // Process raw data
         dayData.forEach(entry => {
           if (typeof entry.capacity !== 'number') return;
           const dt = new Date(entry.timestamp);
@@ -692,21 +886,16 @@
 
           let colIndex;
           if (!isHalfHour) {
-            // Hourly block
             colIndex = localHour;  // 0..23
           } else {
-            // Half-hour block => hour*2 + (0 if min<30 else 1)
             colIndex = localHour * 2 + (localMin >= 30 ? 1 : 0);
           }
-
-          // Accumulate
           if (colIndex >= 0 && colIndex < totalCols) {
             sums[colIndex] += entry.capacity;
             counts[colIndex]++;
           }
         });
 
-        // Build row
         const tr = document.createElement('tr');
         const dtDate = new Date(date + "T00:00:00+08:00");
         const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -718,21 +907,19 @@
         dayCell.style.textAlign = 'right';
         tr.appendChild(dayCell);
 
-        // Fill columns in the range
         for (let i = startIndex; i <= endIndex; i++) {
           const avg = counts[i] > 0 ? sums[i] / counts[i] : null;
           const td = document.createElement('td');
           if (avg !== null) {
             td.textContent = avg.toFixed(0);
             let alpha = Math.min(Math.max(avg / 100, 0), 1);
-            td.style.backgroundColor = `rgba(255, 0, 0, ${alpha})`;
+            td.style.backgroundColor = `rgba(255,0,0,${alpha})`;
           } else {
             td.textContent = '-';
             td.style.backgroundColor = '#fff';
           }
           tr.appendChild(td);
         }
-
         tbody.appendChild(tr);
       });
 
@@ -742,13 +929,11 @@
     }
 
     /**
-     * Format a column index i in 12-hour clock form, skipping times 11pm..5am.
+     * Format a column index i in 12-hour clock form
      * If isHalfHour => i in [0..47], else => i in [0..23].
-     * We'll still label only the columns we show (5..22 or 10..45).
+     * We'll only show columns for 5..22 or 10..45
      */
     function formatHour12Block(i, isHalfHour) {
-      // e.g., i=5 => 5 am, i=22 => 10 pm
-      // for half-hour => i=10 => 5:00 am, i=45 => 22:30
       const suffix = (hour24) => (hour24 < 12 ? 'am' : 'pm');
       const to12 = (hour24) => {
         let h12 = hour24 % 12;
@@ -757,36 +942,18 @@
 
       if (!isHalfHour) {
         // Hourly => i is the hour in 24h
-        // i e.g. 5 => 5 am, 22 => 10 pm
         const hour12 = to12(i);
         return `${hour12} ${suffix(i)}`;
       } else {
         // Half-hour => i in [0..47]
-        // hour = i//2, half= i%2
         const hour = Math.floor(i / 2);
-        const half = i % 2; // 0 => :00, 1 => :30
+        const half = i % 2;
         const hour12 = to12(hour);
         if (half === 1) {
           return `${hour12}:30 ${suffix(hour)}`;
         } else {
           return `${hour12} ${suffix(hour)}`;
         }
-      }
-    }
-
-
-    // Format an hour (and optional half-hour) in 12-hour clock form
-    function formatHour12(hour24, half) {
-      // hour24 is 0..23
-      // half => if true => :30
-      const suffix = hour24 < 12 ? 'am' : 'pm';
-      let hour12 = hour24 % 12;
-      if (hour12 === 0) hour12 = 12;
-
-      if (half) {
-        return `${hour12}:30 ${suffix}`;
-      } else {
-        return `${hour12} ${suffix}`;
       }
     }
   </script>
