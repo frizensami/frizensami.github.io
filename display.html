@@ -247,6 +247,24 @@
     .heatmap-table th {
       background: #f2f2f2;
     }
+
+    .back-link {
+      display: inline-block;
+      margin-left: 2px;
+      font-size: 0.9em;
+      text-decoration: none;
+      color: #007BFF;
+      border: 1px solid #007BFF;
+      border-radius: 4px;
+      padding: 4px 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-link:hover {
+      background-color: #007BFF;
+      color: #fff;
+      text-decoration: none;
+    }
   </style>
 
   <!-- Chart.js -->
@@ -264,6 +282,8 @@
 
     <header>
       <h1>ActiveSG Capacities Dashboard</h1>
+      By <a href="https://sriramsami.com" class="back-link">Sriram Sami</a>
+
     </header>
 
     <!-- Search filter -->
