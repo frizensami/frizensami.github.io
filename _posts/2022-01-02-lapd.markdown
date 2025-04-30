@@ -7,7 +7,7 @@ image: null
 hide_date: true 
 headerImage: false
 #hidden: true 
-description: "A novel hidden camera detection and localization system that leverages the time-of-flight (ToF) sensor on commodity smartphones."
+description: "Part of my doctoral research: a novel hidden camera detection and localization system that leverages the time-of-flight (ToF) sensor on commodity smartphones."
 category: project
 author: sriram
 externalLink: false
