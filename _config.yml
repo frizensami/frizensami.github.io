@@ -1,115 +1,115 @@
-  # main text of home
-  name: Sriram Sami
-  bio: "I am a Lecturer and Computer Science PhD graduate from the <br>National University of Singapore. <br><br> I <a href=\"/teaching\">teach</a> introductory courses for <strong>Computer Engineering</strong> students, and Operating Systems / Parallel Computing courses for <strong>Computer Science</strong> students. <br><br> I also proudly advise the <a target=\"_blank\" href=\"https://hpc.comp.nus.edu.sg/\">NUS Student High-Performance Computing Team</a> :)  <br><br>  My <a href=\"/research\">research</a> focuses on <strong> security and privacy issues </strong> and <strong> novel use-cases </strong> for <strong> active sensors </strong> (e.g., LIDARs)</b>.<br><br><br><strong>Office:</strong> School of Computing, <a href=\"https://cms-wp-dev2.d2.comp.nus.edu.sg/fbs/images/COM2_03.jpg\" target=\"_blank\"><u>COM2 03-29</u></a>"
+# main text of home
+name: Sriram Sami
+bio: 'I am a Lecturer and Computer Science PhD graduate from the <br>National University of Singapore, <a href="/teaching">teaching</a> introductory courses for <strong>Computer Engineering</strong> students, and Parallel Computing for <strong>Computer Science</strong> students.  <br><br> I also proudly advise the <a target=\"_blank\" href=\"https://nushpc.org/\">NUS Student High-Performance Computing Team</a> :) <br><br>  My <a href="/research">graduate research</a> focused on <strong> security and privacy issues </strong> and <strong> novel use-cases </strong> for <strong> active sensors </strong> (e.g., LIDARs)</b>.<br><br><strong>Office:</strong> School of Computing, <a href="https://cms-wp-dev2.d2.comp.nus.edu.sg/fbs/images/COM2_03.jpg" target="_blank"><u>COM2 03-29</u></a>'
 
 #   bioext: I have been part of the <a href="https://www.cyphy-lab.org/" target="_blank">Cyber-Physical Systems and Security</a> <strong> (CyPhy)</strong> and <a href="https://www.cir.nus.edu.sg/" target="_blank">Communication and Internet Research</a><strong> (CIR) </strong> research groups. <br> <br>
-  bioext: "<br/><p style=\"margin-bottom:-10px\">Links to my LinkedIn, GitHub, and email:</p>"
+bioext: '<br/><p style="margin-top: -30px; margin-bottom:-30px">Links to my LinkedIn, GitHub, and email:</p>'
 
-  description: Sriram Sami
+description: Sriram Sami
 
-  # if it's an external image, update below for true
-  # better with square images
-  external-image: false
-  picture: assets/images/me.png
+# if it's an external image, update below for true
+# better with square images
+external-image: false
+picture: assets/images/me.png
 
-  # If you want to include your resume, set to true
-  # and specify source (external or local).
-  resume: true
-  resume-url: assets/cv.pdf
-  #resume-external: true
+# If you want to include your resume, set to true
+# and specify source (external or local).
+resume: true
+resume-url: assets/cv.pdf
+#resume-external: true
 
-  url: https://sriramsami.com
-  # your url: http://USERNAME.github.io
+url: https://sriramsami.com
+# your url: http://USERNAME.github.io
 
-  permalink: /:title/
+permalink: /:title/
 
-  # To enable google analytics, supply your token below
-  # Originally "UA-126704116-1"
-  analytics-google: "G-37TR9Q8T8Q"
+# To enable google analytics, supply your token below
+# Originally "UA-126704116-1"
+analytics-google: "G-37TR9Q8T8Q"
 
-  # To enable piwik tracking, supply your url & site ID below
-  # analytics-piwik-url: 'piwik.my-host.com'
-  # analytics-piwik-id: 1
+# To enable piwik tracking, supply your url & site ID below
+# analytics-piwik-url: 'piwik.my-host.com'
+# analytics-piwik-id: 1
 
-  # if you don't want comments in your posts, leave categories empty
-  # disqus:
-  # shortname: sriramsami # enter this from your disqus account
-  # categories: [blog, project, test] #[blog, project] # only show disqus for posts that have these categories
+# if you don't want comments in your posts, leave categories empty
+# disqus:
+# shortname: sriramsami # enter this from your disqus account
+# categories: [blog, project, test] #[blog, project] # only show disqus for posts that have these categories
 
-  # if you don't have any of social below, comment the line
-  # facebook: frizensami
-  # twitter: mytwitter
-  # google: mygoogle
-  # instagram: myinstagram
-  # pinterest: mypinterest
-  linkedin: sriramsami
-  # youtube: myyoutube
-  # spotify: myspotify
-  github: frizensami
-  # gitlab: mygitlab
-  # lastfm: mylastfm
-  # stackoverflow: 7044681/mystackoverflow
-  # quora: userquora
-  # reddit: username
-  #medium: medium
-  # vimeo: myvimeo
-  # lanyrd: mylanyrd
-  email: srirams@comp.nus.edu.sg
+# if you don't have any of social below, comment the line
+# facebook: frizensami
+# twitter: mytwitter
+# google: mygoogle
+# instagram: myinstagram
+# pinterest: mypinterest
+linkedin: sriramsami
+# youtube: myyoutube
+# spotify: myspotify
+github: frizensami
+# gitlab: mygitlab
+# lastfm: mylastfm
+# stackoverflow: 7044681/mystackoverflow
+# quora: userquora
+# reddit: username
+#medium: medium
+# vimeo: myvimeo
+# lanyrd: mylanyrd
+email: sriramsami@nus.edu.sg
 
-  # do you want a larger site? change the option below
-  # options: [normal, large] | default: normal
-  # normal = 560px / large = 810px
-  width: large
+# do you want a larger site? change the option below
+# options: [normal, large] | default: normal
+# normal = 560px / large = 810px
+width: large
 
-  # if you don't need pagination, comment the *paginate* configs below
-  # paginate: 5
-  # paginate_path: "blog/:num/"
+# if you don't need pagination, comment the *paginate* configs below
+# paginate: 5
+# paginate_path: "blog/:num/"
 
-  # if you don't need projects, comment the *projects* configs below
-  projects: true
+# if you don't need projects, comment the *projects* configs below
+projects: true
 
-  # if you don't need "about" or "blog", comment them out below
-  # about: true
-  blog: true
+# if you don't need "about" or "blog", comment them out below
+# about: true
+blog: true
 
-  # Research page
-  research: true
+# Research page
+research: true
 
-  # Teaching page
-  teaching: true
+# Teaching page
+teaching: true
 
-  # do you want to show the "read time" of the posts?
-  read-time: true
+# do you want to show the "read time" of the posts?
+read-time: true
 
-  # do you want to show the "tags" inside the posts?
-  show-tags: true
+# do you want to show the "tags" inside the posts?
+show-tags: true
 
-  # related posts inside a post?
-  related: true
+# related posts inside a post?
+related: true
 
-  # Include a GPG key?
-  gpg: true
-  gpg-url: frizensami-public-pgp.key
+# Include a GPG key?
+gpg: true
+gpg-url: frizensami-public-pgp.key
 
-  # Include a GPG key?
-  ssh: true
-  ssh-url: frizensami-public-ssh.key
+# Include a GPG key?
+ssh: true
+ssh-url: frizensami-public-ssh.key
 
-  # Display links for next and previous posts for the specified categories
-  post-advance-links: [blog]
+# Display links for next and previous posts for the specified categories
+post-advance-links: [blog]
 
-  # show author block at the end of a post ?
-  # show-author: true
+# show author block at the end of a post ?
+# show-author: true
 
-  # do you want some animations?
-  animation: true
+# do you want some animations?
+animation: true
 
-  plugins:
-      - jekyll-seo-tag
-      - jekyll-gist
-      - jekyll-feed
-      - jemoji
-      # - jekyll-admin
+plugins:
+  - jekyll-seo-tag
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+  # - jekyll-admin
 
-  jekyll-mentions:
-      base_url: https://github.com
+jekyll-mentions:
+  base_url: https://github.com
