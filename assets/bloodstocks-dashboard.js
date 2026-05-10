@@ -16,6 +16,7 @@
   const LEGACY_HISTORY_URL = "/assets/blood.json";
   const LATEST_URL = "https://raw.githubusercontent.com/frizensami/red-cross-blood-stocks/main/blood-stocks.json";
   const LATEST_COMMIT_URL = "https://api.github.com/repos/frizensami/red-cross-blood-stocks/commits/main";
+  const HOVER_DATE_FORMAT = "%{x|%d %b %Y}";
 
   const state = {
     records: [],
@@ -285,7 +286,7 @@
         symbol: "diamond",
         line: { color: "#ffffff", width: 2 },
       },
-      hovertemplate: `${point.label}<br>${point.bloodType}<br>%{x}<br>%{y:.1f}%<extra></extra>`,
+      hovertemplate: `${point.label}<br>${point.bloodType}<br>${HOVER_DATE_FORMAT}<br>%{y:.1f}%<extra></extra>`,
       showlegend: false,
     }));
   }
@@ -302,7 +303,7 @@
         mode: "lines",
         name: type,
         line: { color: COLORS[type], width: 2 },
-        hovertemplate: `${type}<br>%{x}<br>%{y:.1f}%<extra></extra>`,
+        hovertemplate: `${type}<br>${HOVER_DATE_FORMAT}<br>%{y:.1f}%<extra></extra>`,
       };
     }).filter((trace) => trace.x.length > 0);
     const traces = state.showAnnotations ? [...lineTraces, ...annotationMarkerTraces(rows)] : lineTraces;
