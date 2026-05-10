@@ -1,15 +1,8 @@
-# GitHub action that runs daily
-# Runs the `scripts/bloodstocks.js` script and saves the stdout in `assets/blood.json`
-# Also should allow updating the file manually via the Actions tab
-
-name: Get Stocks
+name: Build Blood Stocks History
 
 on:
-  # Run daily
   schedule:
     - cron: "0 0 * * *"
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -18,17 +11,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Checkout blood stocks data
+        uses: actions/checkout@v4
+        with:
+          repository: frizensami/red-cross-blood-stocks
+          path: .blood-stocks
+          fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
-      - name: Install dependencies
-        run: npm install
-      - name: Run script
-        run: node scripts/bloodstocks.js
+          node-version: '20'
+      - name: Generate history
+        run: node scripts/bloodstocks-history.js
+        env:
+          BLOOD_STOCKS_REPO: .blood-stocks
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: blood
-          path: assets/blood-test.json
-          
+          name: blood-history
+          path: assets/blood-history.json

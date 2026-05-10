@@ -24,182 +24,80 @@ author: sriram
 
 {:refdef: style="text-align: center;"}
 
-<!-- ![Graph of Singapore Blood Stocks since June 2021](/assets/images/bloodstocks/bloodstocks.png){:height="auto"} -->
-
-<!-- Dynamically generate a graph of blood stocks using Plotly. The data is in assets/blood.json -->
-<!-- The data format is a list of dictionaries, each dict has structure e.g., {"date":"2024-03-06","bloodType":"A+","fillLevel":83} -->
-
-<!-- Plot three subplots: (1) all the blood stocks (2) just the positive blood types (3) just the negative blood types -->
-<!-- Reuse as much code as possible. Also, display any other graphs you think are useful.  -->
-
 ### Interactive Graphs
 
-<!-- Add a note in red that this section is best viewed on a desktop. -->
-
-<p style="color:red"><em>These graphs are best viewed on a desktop.</em></p>
-
+<link rel="stylesheet" href="/assets/bloodstocks-dashboard.css">
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="/assets/bloodstocks-dashboard.js" defer></script>
 
-<details>
-  <summary style="background-color: lightgrey; padding: 10px; margin-bottom: 10px;">
-    <span style="display: inline-block; margin-right: 5px;" id="accordion-arrow">▶</span>
-    Daily Blood Stock Data (Click to expand)
-  </summary>
-  <div id="blood-stocks-graph"></div>
-</details>
+<div class="blood-dashboard" data-blood-dashboard>
+  <div class="blood-dashboard__header">
+    <div>
+      <h3>Singapore Blood Stocks Dashboard</h3>
+      <p>Explore the scraped Red Cross blood stock levels over time.</p>
+    </div>
+    <div class="blood-dashboard__status" data-blood-status>Loading data...</div>
+  </div>
 
-<details open>
-  <summary style="background-color: lightgrey; padding: 10px; margin-bottom: 10px;">
-    <span style="display: inline-block; margin-right: 5px;" id="accordion-arrow">▶</span>
-    Weekly Blood Stock Data (Click to expand)
-  </summary>
-  <div id="blood-stocks-weekly-graph"></div>
-</details>
+  <div class="blood-dashboard__cards" data-blood-cards></div>
 
-<details>
-  <summary style="background-color: lightgrey; padding: 10px; margin-bottom: 10px;">
-    <span style="display: inline-block; margin-right: 5px;" id="accordion-arrow">▶</span>
-    Monthly Blood Stock Data (Click to expand)
-  </summary>
-  <div id="blood-stocks-monthly-graph"></div>
-</details>
+  <div class="blood-dashboard__controls">
+    <div class="blood-control">
+      <span class="blood-control__label">Blood types</span>
+      <div class="blood-checks">
+        <label><input type="checkbox" data-blood-type value="A+" checked> A+</label>
+        <label><input type="checkbox" data-blood-type value="A-" checked> A-</label>
+        <label><input type="checkbox" data-blood-type value="B+" checked> B+</label>
+        <label><input type="checkbox" data-blood-type value="B-" checked> B-</label>
+        <label><input type="checkbox" data-blood-type value="O+" checked> O+ <span class="blood-info" tabindex="0" aria-label="O positive is a very commonly needed red cell type." data-info="O+ red cells can be given to any Rh-positive recipient: O+, A+, B+, or AB+. It is also a very commonly needed type.">i</span></label>
+        <label><input type="checkbox" data-blood-type value="O-" checked> O- <span class="blood-info" tabindex="0" aria-label="O negative is the universal red cell donor type." data-info="Universal red cell donor: O- red cells can be given to patients of any ABO/Rh type, so they are especially useful in emergencies.">i</span></label>
+        <label><input type="checkbox" data-blood-type value="AB+" checked> AB+ <span class="blood-info" tabindex="0" aria-label="AB positive is the universal red cell recipient type." data-info="Universal red cell recipient: AB+ patients can receive red cells from any ABO/Rh type.">i</span></label>
+        <label><input type="checkbox" data-blood-type value="AB-" checked> AB- <span class="blood-info" tabindex="0" aria-label="AB negative is a rare blood type." data-info="Rare type: AB- patients can receive red cells from Rh-negative types only: O-, A-, B-, or AB-.">i</span></label>
+      </div>
+    </div>
 
-<script>
-  const accordions = document.querySelectorAll('details');
-  accordions.forEach(accordion => {
-    accordion.addEventListener('toggle', () => {
-      const arrow = accordion.querySelector('#accordion-arrow');
-      arrow.textContent = accordion.open ? '▼' : '▶';
-    });
-  });
-</script>
+    <div class="blood-control">
+      <span class="blood-control__label">Aggregation</span>
+      <div class="blood-segments">
+        <button type="button" data-blood-aggregation="daily" aria-pressed="false">Daily</button>
+        <button type="button" data-blood-aggregation="weekly" aria-pressed="true">Weekly</button>
+        <button type="button" data-blood-aggregation="monthly" aria-pressed="false">Monthly</button>
+      </div>
+    </div>
 
+    <div class="blood-control">
+      <label for="blood-range">Date range</label>
+      <select id="blood-range" data-blood-range>
+        <option value="all">All data</option>
+        <option value="365" selected>Last year</option>
+        <option value="180">Last 6 months</option>
+        <option value="90">Last 90 days</option>
+      </select>
+    </div>
 
-<script>
-  async function plotDailyGraph() {
-    const response = await fetch('/assets/blood.json');
-    const data = await response.json();
-    const bloodTypes = [...new Set(data.map(d => d.bloodType))];
-    const positiveBloodTypes = bloodTypes.filter(bloodType => bloodType.includes('+'));
-    const negativeBloodTypes = bloodTypes.filter(bloodType => bloodType.includes('-'));
-    const positiveTraces = positiveBloodTypes.map(bloodType => ({
-      x: data.filter(d => d.bloodType === bloodType).map(d => d.date),
-      y: data.filter(d => d.bloodType === bloodType).map(d => d.fillLevel),
-      mode: 'lines',
-      name: bloodType
-    }));
-    const negativeTraces = negativeBloodTypes.map(bloodType => ({
-      x: data.filter(d => d.bloodType === bloodType).map(d => d.date),
-      y: data.filter(d => d.bloodType === bloodType).map(d => d.fillLevel),
-      mode: 'lines',
-      name: bloodType
-    }));
-    const layout = {
-      title: 'Daily Singapore Blood Stocks since June 2021 (Data not collected from Mid-August to Mid-Oct 2023)',
-      xaxis: {
-        title: 'Date',
-        tickformat: '%b %Y',
-        type: 'date',
-        rangemode: 'tozero'
-      },
-      yaxis: {
-        title: 'Fill Level (%)'
-      },
-      subplot_titles: ['Positive Blood Stocks', 'Negative Blood Stocks']
-    };
-    Plotly.newPlot('blood-stocks-graph', [...positiveTraces, ...negativeTraces], { ...layout, showlegend: true });
-  }
-  plotDailyGraph();
-</script>
+    <div class="blood-control">
+      <label for="blood-group">Grouping</label>
+      <select id="blood-group" data-blood-group>
+        <option value="all">All blood types</option>
+        <option value="positive">Positive types</option>
+        <option value="negative">Negative types</option>
+      </select>
+    </div>
 
+    <div class="blood-control">
+      <span class="blood-control__label">Annotations</span>
+      <div class="blood-checks">
+        <label><input type="checkbox" data-blood-annotations checked> Show points of interest</label>
+      </div>
+    </div>
+  </div>
 
-<!-- Plot a weekly-averaged graph of the data. Do not use reduce functions. Sort by the date. Only display the month and year on x axis -->
-<script>
-  async function plotWeeklyGraph() {
-    const response = await fetch('/assets/blood.json');
-    const data = await response.json();
-    const bloodTypes = [...new Set(data.map(d => d.bloodType))];
-    const traces = bloodTypes.map(bloodType => {
-      const bloodTypeData = data.filter(d => d.bloodType === bloodType);
-      const weeklyAverages = [];
-      let weeklyTotal = 0;
-      let weeklyCount = 0;
-      for (let i = 0; i < bloodTypeData.length; i++) {
-        weeklyTotal += bloodTypeData[i].fillLevel;
-        weeklyCount++;
-        if (i % 7 === 6 || i === bloodTypeData.length - 1) {
-          weeklyAverages.push(weeklyTotal / weeklyCount);
-          weeklyTotal = 0;
-          weeklyCount = 0;
-        }
-      }
-      return {
-        x: weeklyAverages.map((_, i) => bloodTypeData[i * 7].date),
-        y: weeklyAverages,
-        mode: 'lines',
-        name: bloodType
-      };
-    });
-    const layout = {
-      title: 'Weekly Averaged Singapore Blood Stocks since June 2021 (Data not collected from Mid-August to Mid-Oct 2023)',
-      xaxis: {
-        title: 'Date',
-        tickformat: '%b %Y',
-        type: 'date',
-        rangemode: 'tozero'
-      },
-      yaxis: {
-        title: 'Fill Level (%)'
-      }
-    };
-    Plotly.newPlot('blood-stocks-weekly-graph', traces, layout);
-  }
-  plotWeeklyGraph();
-</script>
+  <div class="blood-dashboard__chart" data-blood-chart></div>
 
-<!-- Plot now a monthly averaged version -->
-<script>
-  async function plotMonthlyGraph() {
-    const response = await fetch('/assets/blood.json');
-    const data = await response.json();
-    const bloodTypes = [...new Set(data.map(d => d.bloodType))];
-    const traces = bloodTypes.map(bloodType => {
-      const bloodTypeData = data.filter(d => d.bloodType === bloodType);
-      const monthlyAverages = [];
-      let monthlyTotal = 0;
-      let monthlyCount = 0;
-      for (let i = 0; i < bloodTypeData.length; i++) {
-        monthlyTotal += bloodTypeData[i].fillLevel;
-        monthlyCount++;
-        if (i % 30 === 29 || i === bloodTypeData.length - 1) {
-          monthlyAverages.push(monthlyTotal / monthlyCount);
-          monthlyTotal = 0;
-          monthlyCount = 0;
-        }
-      }
-      return {
-        x: monthlyAverages.map((_, i) => bloodTypeData[i * 30].date),
-        y: monthlyAverages,
-        mode: 'lines',
-        name: bloodType
-      };
-    });
-    const layout = {
-      title: 'Monthly Averaged Singapore Blood Stocks since June 2021 (Data not collected from Mid-August to Mid-Oct 2023)',
-      xaxis: {
-        title: 'Date',
-        tickformat: '%b %Y',
-        type: 'date',
-        rangemode: 'tozero'
-      },
-      yaxis: {
-        title: 'Fill Level (%)'
-      }
-    };
-    Plotly.newPlot('blood-stocks-monthly-graph', traces, layout);
-  }
-  plotMonthlyGraph();
-</script>
+  <div class="blood-dashboard__note">
+    Data is unofficial and comes from <a href="https://github.com/frizensami/red-cross-blood-stocks" target="_blank" rel="noopener">https://github.com/frizensami/red-cross-blood-stocks</a>
+  </div>
+</div>
 
 
 
@@ -291,6 +189,8 @@ I get asked sometimes if the blood stock levels are sensitive information and wh
 ### Downloading and plotting
 
 The blood stock data is stored in [this repository](https://github.com/frizensami/red-cross-blood-stocks){:target="\_blank" rel="noopener"}, but each update is a separate [git commit](https://www.atlassian.com/git/tutorials/saving-changes/git-commit){:target="\_blank" rel="noopener"}. We first have to download all versions of `blood-stocks.json` across all commits. The code to download and analyze the most up-to-date data is [here](https://github.com/frizensami/bloodstock_analysis){:target="\_blank" rel="noopener"}, feel free to give it a go!
+
+The static graph below only includes data until mid-November 2022.
 
 {:refdef: style="text-align: center;"}
 ![Sample Graph of Singapore Blood Stocks](/assets/images/bloodstocks/bloodstocks.png){:height="auto"}

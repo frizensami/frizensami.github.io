@@ -36,6 +36,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Checkout blood stocks data
+        uses: actions/checkout@v4
+        with:
+          repository: frizensami/red-cross-blood-stocks
+          path: .blood-stocks
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate blood stocks history
+        run: node scripts/bloodstocks-history.js
+        env:
+          BLOOD_STOCKS_REPO: .blood-stocks
       - name: Setup Ruby
         uses: ruby/setup-ruby@8575951200e472d5f2d95c625da0c7bec8217c42 # v1.161.0
         with:
