@@ -1,0 +1,32 @@
+---
+title: "Singlang"
+layout: post
+tag: [language, haskell, interpreter, playground]
+projects: true
+image: null
+hide_date: true
+headerImage: false
+description: "A programming language for Singaporeans, written with Singlish syntax and a browser playground."
+category: project
+author: sriram
+externalLink: false
+---
+
+
+
+# Overview
+
+Singlang (at <a href="https://sriramsami.com/singlang/" target="_blank">sriramsami.com/singlang</a>) is a small programming language built around Singlish syntax.
+
+The implementation is a real interpreter rather than a string-replacement layer over another language. The original implementation is written in Haskell using Alex and Happy for lexing and parsing, and the browser playground mirrors the current language behavior so it can run entirely on GitHub Pages.
+
+
+# Try it
+
+You can try Singlang in the browser here:
+
+<p>
+  <a href="https://sriramsami.com/singlang/" target="_blank"><strong>Launch the Singlang Playground</strong></a>
+</p>
+
+The source code is available on <a href="https://github.com/frizensami/singlang" target="_blank">GitHub</a>.
