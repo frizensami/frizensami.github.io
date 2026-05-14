@@ -2,7 +2,6 @@
 title: "ChatGPT Popup Notifier"
 layout: post
 tag: [extension, chatgpt, productivity]
-projects: true
 image: null
 hide_date: true 
 headerImage: false
